@@ -16,8 +16,8 @@ void setup(void) {
   lcd_init();        // ST7735 初始化 (rotation/speed/fill)
   lv_init();         // LVGL 内核
   lv_port_disp_init();   // 画缓冲 + 显示驱动
-  lv_port_indev_init();  // 摇杆输入
-  ui_init();         // benchmark demo + 统计
+  lv_port_indev_init();  // 摇杆输入 (keypad indev, 占位 group)
+  ui_init();             // benchmark -> finished_cb 建焦点 UI + 切 indev group
 
   delay(200);        // 让串口/外设稳定
 }

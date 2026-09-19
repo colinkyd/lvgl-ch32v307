@@ -1,0 +1,227 @@
+[02:14] B3 CPU=77% loop/s=127676 flush/s=0 flush_avg=0ms flush_mavg=20ms flush_max=41ms SPI=36MHz LV_RAM=7KB free=37KB
+=79% loop/s=810 flush/s=37 flush_avg=19ms flush_max=41ms SPI=36MHz LV_RAM=6KB free=37KB
+[00:02] B4 CPU=99% loop/s=772 flush/s=43 flush_[00:04] B4 CPU=98% loop/s=680 flush/s=44 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=7KB free=37KB
+[00:05] B4 CPU=99% loop/s=677 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:06] B4 CPU=98% loop/s=570 flush/s=45 flush_avg=19ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:07] B4 CPU=99% loop/s=888 flush/s=45 flush_avg=19ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:08] B4 CPU=98% loop/s=893 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:09] B4 CPU=98% loop/s=723 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:10] B4 CPU=98% loop/s=695 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:11] B4 CPU=98% loop/s=649 flush/s=44 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:12] B4 CPU=98% loop/s=568 flush/s=44 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:13] B4 CPU=98% loop/s=686 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:14] B4 CPU=98% loop/s=700 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:15] B4 CPU=98% loop/s=775 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:16] B4 CPU=99% loop/s=742 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:17] B4 CPU=98% loop/s=746 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:18] B4 CPU=99% loop/s=718 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:19] B4 CPU=98% loop/s=715 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:20] B4 CPU=98% loop/s=747 flush/s=44 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:21] B4 CPU=98% loop/s=749 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:23] B4 CPU=99% loop/s=675 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:24] B4 CPU=99% loop/s=11 flush/s=37 flush_avg=22ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:25] B4 CPU=99% loop/s=11 flush/s=34 flush_avg=22ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:26] B4 CPU=99% loop/s=9 flush/s=28 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:27] B4 CPU=99% loop/s=8 flush/s=25 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=8KB free=36KB
+[00:28] B4 CPU=99% loop/s=6 flush/s=21 flush_avg=32ms flush_max=41ms SPI=36MHz LV_RAM=12KB free=32KB
+[00:29] B4 CPU=99% loop/s=6 flush/s=21 flush_avg=32ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:30] B4 CPU=99% loop/s=5 flush/s=19 flush_avg=34ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:31] B4 CPU=99% loop/s=5 flush/s=19 flush_avg=34ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:32] B4 CPU=98% loop/s=4075 flush/s=26 flush_avg=31ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:33] B4 CPU=98% loop/s=2760 flush/s=28 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:34] B4 CPU=97% loop/s=9556 flush/s=29 flush_avg=27ms flush_max=40ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:35] B4 CPU=98% loop/s=3580 flush/s=28 flush_avg=29ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:36] B4 CPU=97% loop/s=8215 flush/s=28 flush_avg=28ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:37] B4 CPU=98% loop/s=3524 flush/s=28 flush_avg=29ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:38] B4 CPU=97% loop/s=8213 flush/s=28 flush_avg=28ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:39] B4 CPU=98% loop/s=3606 flush/s=28 flush_avg=29ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:40] B4 CPU=97% loop/s=8139 flush/s=28 flush_avg=28ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:41] B4 CPU=98% loop/s=5129 flush/s=27 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:42] B4 CPU=98% loop/s=2354 flush/s=27 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:43] B4 CPU=97% loop/s=5155 flush/s=27 flush_avg=29ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:44] B4 CPU=98% loop/s=4132 flush/s=27 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:45] B4 CPU=98% loop/s=3860 flush/s=27 flush_avg=29ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:46] B4 CPU=98% loop/s=4093 flush/s=27 flush_avg=30ms flush_max=40ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:47] B4 CPU=98% loop/s=3922 flush/s=27 flush_avg=29ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:48] B4 CPU=98% loop/s=4144 flush/s=27 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:49] B4 CPU=98% loop/s=3909 flush/s=27 flush_avg=29ms flush_max=40ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:50] B4 CPU=99% loop/s=9 flush/s=29 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:51] B4 CPU=99% loop/s=8 flush/s=28 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:52] B4 CPU=99% loop/s=8 flush/s=28 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:54] B4 CPU=99% loop/s=8 flush/s=28 flush_avg=30ms flush_max=40ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:55] B4 CPU=99% loop/s=8 flush/s=28 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:56] B4 CPU=99% loop/s=8 flush/s=28 flush_avg=30ms flush_max=40ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:57] B4 CPU=99% loop/s=8 flush/s=28 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:58] B4 CPU=99% loop/s=8 flush/s=28 flush_avg=30ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[00:59] B4 CPU=99% loop/s=10 flush/s=24 flush_avg=37ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:00] B4 CPU=99% loop/s=10 flush/s=24 flush_avg=37ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:01] B4 CPU=99% loop/s=10 flush/s=24 flush_avg=37ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:02] B4 CPU=99% loop/s=10 flush/s=24 flush_avg=37ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:03] B4 CPU=99% loop/s=10 flush/s=24 flush_avg=37ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:04] B4 CPU=99% loop/s=10 flush/s=24 flush_avg=37ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:05] B4 CPU=99% loop/s=10 flush/s=24 flush_avg=37ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:06] B4 CPU=99% loop/s=10 flush/s=24 flush_avg=37ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:07] B4 CPU=99% loop/s=5 flush/s=17 flush_avg=36ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:08] B4 CPU=99% loop/s=5 flush/s=17 flush_avg=36ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:09] B4 CPU=99% loop/s=5 flush/s=17 flush_avg=36ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:10] B4 CPU=99% loop/s=5 flush/s=17 flush_avg=36ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:11] B4 CPU=99% loop/s=5 flush/s=17 flush_avg=36ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:13] B4 CPU=99% loop/s=5 flush/s=17 flush_avg=36ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:14] B4 CPU=99% loop/s=4 flush/s=16 flush_avg=31ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:15] B4 CPU=99% loop/s=4 flush/s=16 flush_avg=31ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:16] B4 CPU=99% loop/s=4 flush/s=15 flush_avg=34ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:17] B4 CPU=99% loop/s=4 flush/s=15 flush_avg=34ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:18] B4 CPU=99% loop/s=4 flush/s=15 flush_avg=35ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:19] B4 CPU=99% loop/s=4 flush/s=15 flush_avg=35ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:20] B4 CPU=99% loop/s=14 flush/s=35 flush_avg=24ms flush_max=40ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:21] B4 CPU=99% loop/s=14 flush/s=35 flush_avg=24ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:22] B4 CPU=99% loop/s=10 flush/s=42 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:23] B4 CPU=99% loop/s=10 flush/s=40 flush_avg=21ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:24] B4 CPU=99% loop/s=10 flush/s=40 flush_avg=21ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:25] B4 CPU=99% loop/s=10 flush/s=40 flush_avg=21ms flush_max=41ms SPI=36MHz LV_RAM=14KB free=29KB
+[01:26] B4 CPU=98% loop/s=1271 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:27] B4 CPU=98% loop/s=1220 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:28] B4 CPU=98% loop/s=1214 flush/s=43 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:29] B4 CPU=98% loop/s=1149 flush/s=46 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:30] B4 CPU=99% loop/s=11 flush/s=34 flush_avg=28ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:31] B4 CPU=99% loop/s=11 flush/s=34 flush_avg=28ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:32] B4 CPU=97% loop/s=8500 flush/s=31 flush_avg=27ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:33] B4 CPU=97% loop/s=8627 flush/s=31 flush_avg=27ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:34] B4 CPU=99% loop/s=17 flush/s=36 flush_avg=25ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:36] B4 CPU=99% loop/s=16 flush/s=36 flush_avg=25ms flush_max=40ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:37] B4 CPU=99% loop/s=10 flush/s=40 flush_avg=21ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:38] B4 CPU=99% loop/s=10 flush/s=42 flush_avg=20ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:39] B4 CPU=99% loop/s=7 flush/s=23 flush_avg=35ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:40] B4 CPU=99% loop/s=7 flush/s=23 flush_avg=35ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+
+LVGL v8.3.11  Benchmark (in csv format)
+Weighted FPS: 12463
+Opa. speed: 108%
+Rectangle,0
+Rectangle + opa,16000
+Rectangle rounded,16000
+Rectangle rounded + opa,16000
+Circle,16000
+Circle + opa,16000
+Border,16000
+Border + opa,16000
+Border rounded,16000
+Border rounded + opa,16000
+Circle border,16000
+Circle border + opa,16000
+Border top,16000
+Border top + opa,16000
+Border left,16000
+Border left + opa,16000
+Border top + left,16000
+Border top + left + opa,16000
+Border left + right,16000
+Border left + right + opa,16000
+Border top + bottom,16000
+Border top + bottom + opa,16000
+Shadow small,12000
+Shadow small + opa,12000
+Shadow small offset,10000
+Shadow small offset + opa,9000
+Shadow large,7000
+Shadow large + opa,7000
+Shadow large offset,6000
+Shadow large offset + opa,6000
+Image RGB,18000
+Image RGB + opa,17000
+Image ARGB,18000
+Image ARGB + opa,18000
+Image chorma keyed,18000
+Image chorma keyed + opa,18000
+Image indexed,18000
+Image indexed + opa,18000
+Image alpha only,17000
+Image alpha only + opa,17000
+Image RGB recolor,17000
+Image RGB recolor + opa,16000
+Image ARGB recolor,17000
+Image ARGB recolor + opa,17000
+Image chorma keyed recolor,17000
+Image chorma keyed recolor + opa,17000
+Image indexed recolor,17000
+Image indexed recolor + opa,17000
+Image RGB rotate,9000
+Image RGB rotate + opa,9000
+Image RGB rotate anti aliased,9000
+Image RGB rotate anti aliased + opa,9000
+Image ARGB rotate,9000
+Image ARGB rotate + opa,9000
+Image ARGB rotate anti aliased,9000
+Image ARGB rotate anti aliased + opa,9000
+Image RGB zoom,11000
+Image RGB zoom + opa,11000
+Image RGB zoom anti aliased,11000
+Image RGB zoom anti aliased + opa,11000
+Image ARGB zoom,11000
+Image ARGB zoom + opa,11000
+Image ARGB zoom anti aliased,11000
+Image ARGB zoom anti aliased + opa,11000
+Text small,6000
+Text small + opa,6000
+Text medium,6000
+Text medium + opa,6000
+Text large,6000
+Text large + opa,6000
+Text small compressed,5000
+Text small compressed + opa,5000
+Text medium compressed,5000
+Text medium compressed + opa,5000
+Text large compressed,5000
+Text large compressed + opa,5000
+Line,16000
+Line + opa,16000
+Arc think,11000
+Arc think + opa,11000
+Arc thick,11000
+Arc thick + opa,11000
+Substr. rectangle,16000
+Substr. rectangle + opa,16000
+Substr. border,16000
+Substr. border + opa,17000
+Substr. shadow,12000
+Substr. shadow + opa,12000
+Substr. image,20000
+Substr. image + opa,20000
+Substr. line,17000
+Substr. line + opa,17000
+Substr. arc,11000
+Substr. arc + opa,11000
+Substr. text,8000
+Substr. text + opa,8000
+[01:42] B4 CPU=99% loop/s=0 flush/s=4 flush_avg=32ms flush_max=41ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:43] B4 CPU=78% loop/s=133177 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:44] B4 CPU=78% loop/s=133229 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:45] B4 CPU=78% loop/s=133232 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:46] B4 CPU=78% loop/s=133234 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:47] B4 CPU=78% loop/s=133228 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:48] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:49] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:50] B4 CPU=78% loop/s=133228 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:51] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:52] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:53] B4 CPU=78% loop/s=133228 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:54] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:55] B4 CPU=77% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:56] B4 CPU=78% loop/s=133229 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:57] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:58] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[01:59] B4 CPU=78% loop/s=133228 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:00] B4 CPU=77% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:01] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:02] B4 CPU=78% loop/s=133228 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:03] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:04] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:05] B4 CPU=78% loop/s=133229 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:06] B4 CPU=78% loop/s=133232 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:07] B4 CPU=78% loop/s=133234 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:08] B4 CPU=78% loop/s=133228 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:09] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:10] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:11] B4 CPU=78% loop/s=133228 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[02:12] B4 CPU=78% loop/s=133233 flush/s=0 flush_avg=0ms flush_max=0ms SPI=36MHz LV_RAM=20KB free=24KB
+[

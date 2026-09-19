@@ -23,11 +23,11 @@ void setup(void) {
 }
 
 void loop(void) {
-  uint32_t t0 = micros();
+  uint32_t t0 = millis();          /* millis 分辨率 (WCH micros 短窗口噪声大) */
 
+  perf_on_frame();           /* 主循环率参考 */
   lv_port_tick_task();   // 硬件 1ms tick 增量
-  lv_timer_handler();    // 非阻塞 LVGL 主处理 (动画/timer/刷新)
+  lv_timer_handler();    // 非阻塞 LVGL 主处理 (动画/timer/刷新, 含同步 flush)
 
-  uint32_t work_us = micros() - t0;
-  ui_stats_tick(work_us); // CPU 占用 + RAM 统计 (1s 窗口)
+  ui_stats_tick(millis() - t0); // 本帧 LVGL 忙时间 (ms) -> CPU 占比 + perf 上报
 }

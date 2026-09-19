@@ -6,42 +6,41 @@ extern "C" {
 extern void lv_demo_benchmark(void);   /* LVGL 库 src/bm_benchmark.c */
 }
 
-/* ---- 统计状态 ---- */
-static uint64_t  loop_work_us = 0;      /* loop 内处理累计耗时 (us) */
-static uint32_t  window_start_ms = 0;
+/* ---- CPU 占用: lv_timer_handler 忙时间占比 (millis 分辨率, 1s 窗口) ---- */
+static uint32_t  loop_work_ms = 0;
+static uint32_t  cpu_win_start = 0;
 
-static void report_stats(uint32_t now) {
-  uint32_t win_ms = now - window_start_ms;
-  if (win_ms < 1000) return;
-
-  uint32_t cpu_pct = (uint32_t)(loop_work_us * 100UL / (win_ms * 1000UL));
-  void *hb = _sbrk(0);
-  uint32_t lv_ram   = (uint32_t)hb - (uint32_t)_end;
-  uint32_t free_ram = HEAP_END_ADDR - (uint32_t)hb;
-  uint32_t up_min = now / 60000, up_sec = (now % 60000) / 1000;
-
-  Serial.printf("[%02lu:%02lu] CPU=%lu%% LV_RAM=%luKB free=%luKB\r\n",
-                up_min, up_sec,
-                (unsigned long)cpu_pct,
-                (unsigned long)lv_ram,
-                (unsigned long)free_ram);
-
-  loop_work_us = 0;
-  window_start_ms = now;
+/* LV_LOG 回调: 把 benchmark 的 Weighted FPS / 场景日志打到串口 */
+static void perf_log_cb(const char *buf) {
+  Serial.print(buf);
 }
 
 void ui_init(void) {
+  lv_log_register_print_cb(perf_log_cb);   /* 抓 benchmark 权威 Weighted FPS */
   lv_demo_benchmark();
-  window_start_ms = millis();
+  cpu_win_start = millis();
+  perf_init();
 
-  Serial.println("=== LVGL 8.3.11 benchmark (CH32V307) ===");
-  Serial.printf("heap: start=%p end=%p total=%luKB\r\n",
-                (void *)_end, (void *)HEAP_END_ADDR,
+  Serial.println("=== LVGL 8.3.11 benchmark (CH32V307) perf test ===");
+  Serial.printf("tag=%s buf_lines=%d spi_req=%luMHz heap_total=%luKB\r\n",
+                PERF_TEST_TAG, LV_BUF_LINES,
+                (unsigned long)(PERF_SPI_SPEED / 1000000UL),
                 (unsigned long)(HEAP_TOTAL / 1024));
-  Serial.println("Stats every 1s on serial.");
+  Serial.println("Perf report every 1s. Weighted FPS = benchmark authority.");
 }
 
-void ui_stats_tick(uint32_t frame_work_us) {
-  loop_work_us += frame_work_us;
-  report_stats(millis());
+void ui_stats_tick(uint32_t frame_work_ms) {
+  loop_work_ms += frame_work_ms;
+  uint32_t now = millis();
+
+  uint32_t win = now - cpu_win_start;
+  if (win >= 1000) {
+    uint32_t cpu_pct = (uint32_t)((uint64_t)loop_work_ms * 100UL / win);
+    void *hb = _sbrk(0);
+    uint32_t lv_ram_kb   = ((uint32_t)hb - (uint32_t)_end) / 1024;
+    uint32_t free_ram_kb = (HEAP_END_ADDR - (uint32_t)hb) / 1024;
+    perf_report(now, cpu_pct, lv_ram_kb, free_ram_kb);
+    loop_work_ms = 0;
+    cpu_win_start = now;
+  }
 }

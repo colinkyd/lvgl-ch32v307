@@ -1,0 +1,223 @@
+[02:14] B4 CPU=77% loop/s=133228 flush/s=0 flush_avg=0ms flush_mms flush_max=14ms SPI=4MHz LV_RAM=7KB free=46KB
+S8 CPU=79% loop/s=8 flush/s=64 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=6KB free=47KB
+[00:03] S8 CPU=99% loop/s=9 flush/s=73 flush_avg=11[00:04] S8 CPU=99% loop/s=9 flush/s=73 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=7KB free=46KB
+[00:05] S8 CPU=99% loop/s=9 flush/s=73 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=7KB free=46KB
+[00:06] S8 CPU=99% loop/s=9 flush/s=73 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=7KB free=46KB
+[00:07] S8 CPU=99% loop/s=10 flush/s=79 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=7KB free=46KB
+[00:08] S8 CPU=99% loop/s=10 flush/s=74 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=7KB free=46KB
+[00:09] S8 CPU=99% loop/s=9 flush/s=75 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=7KB free=46KB
+[00:10] S8 CPU=99% loop/s=9 flush/s=72 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=7KB free=46KB
+[00:11] S8 CPU=99% loop/s=9 flush/s=72 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:12] S8 CPU=99% loop/s=9 flush/s=71 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:13] S8 CPU=99% loop/s=9 flush/s=71 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:14] S8 CPU=99% loop/s=8 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:15] S8 CPU=99% loop/s=9 flush/s=72 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:16] S8 CPU=99% loop/s=9 flush/s=73 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:17] S8 CPU=99% loop/s=9 flush/s=73 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:18] S8 CPU=99% loop/s=9 flush/s=73 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:19] S8 CPU=99% loop/s=9 flush/s=72 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:20] S8 CPU=99% loop/s=9 flush/s=72 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:21] S8 CPU=99% loop/s=9 flush/s=71 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:22] S8 CPU=99% loop/s=9 flush/s=72 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=8KB free=45KB
+[00:23] S8 CPU=99% loop/s=8 flush/s=71 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=9KB free=44KB
+[00:24] S8 CPU=99% loop/s=6 flush/s=61 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=9KB free=44KB
+[00:25] S8 CPU=99% loop/s=6 flush/s=64 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=9KB free=44KB
+[00:26] S8 CPU=99% loop/s=5 flush/s=65 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=9KB free=44KB
+[00:27] S8 CPU=99% loop/s=4 flush/s=57 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=11KB free=42KB
+[00:28] S8 CPU=99% loop/s=3 flush/s=45 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=13KB free=40KB
+[00:30] S8 CPU=99% loop/s=3 flush/s=44 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:31] S8 CPU=99% loop/s=3 flush/s=47 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:32] S8 CPU=99% loop/s=6 flush/s=56 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:33] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:34] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:35] S8 CPU=99% loop/s=9 flush/s=71 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:36] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:37] S8 CPU=99% loop/s=9 flush/s=71 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:38] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:39] S8 CPU=99% loop/s=9 flush/s=71 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:40] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:41] S8 CPU=99% loop/s=9 flush/s=71 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:42] S8 CPU=99% loop/s=9 flush/s=71 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:43] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:44] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:45] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:46] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:47] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:48] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:49] S8 CPU=99% loop/s=9 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:50] S8 CPU=99% loop/s=7 flush/s=68 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:51] S8 CPU=99% loop/s=6 flush/s=73 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:53] S8 CPU=99% loop/s=6 flush/s=73 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:54] S8 CPU=99% loop/s=6 flush/s=73 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:55] S8 CPU=99% loop/s=6 flush/s=73 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:56] S8 CPU=99% loop/s=6 flush/s=73 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:57] S8 CPU=99% loop/s=6 flush/s=73 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:58] S8 CPU=99% loop/s=6 flush/s=73 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[00:59] S8 CPU=99% loop/s=6 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:00] S8 CPU=99% loop/s=7 flush/s=70 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:01] S8 CPU=99% loop/s=7 flush/s=70 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:03] S8 CPU=99% loop/s=7 flush/s=70 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:04] S8 CPU=99% loop/s=7 flush/s=70 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:05] S8 CPU=99% loop/s=7 flush/s=70 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:06] S8 CPU=99% loop/s=7 flush/s=70 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:07] S8 CPU=99% loop/s=7 flush/s=70 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:08] S8 CPU=99% loop/s=5 flush/s=53 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:09] S8 CPU=99% loop/s=3 flush/s=44 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:10] S8 CPU=99% loop/s=3 flush/s=46 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:11] S8 CPU=99% loop/s=3 flush/s=46 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:13] S8 CPU=99% loop/s=3 flush/s=46 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:14] S8 CPU=99% loop/s=3 flush/s=46 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:15] S8 CPU=99% loop/s=3 flush/s=46 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:16] S8 CPU=99% loop/s=3 flush/s=45 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:18] S8 CPU=99% loop/s=3 flush/s=45 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:19] S8 CPU=99% loop/s=2 flush/s=45 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:20] S8 CPU=99% loop/s=2 flush/s=45 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:21] S8 CPU=99% loop/s=2 flush/s=32 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:23] S8 CPU=99% loop/s=6 flush/s=51 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:24] S8 CPU=99% loop/s=9 flush/s=69 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:25] S8 CPU=99% loop/s=8 flush/s=71 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:26] S8 CPU=99% loop/s=7 flush/s=68 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:27] S8 CPU=99% loop/s=7 flush/s=68 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:28] S8 CPU=99% loop/s=7 flush/s=68 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:29] S8 CPU=99% loop/s=8 flush/s=71 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:30] S8 CPU=99% loop/s=9 flush/s=76 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:31] S8 CPU=99% loop/s=10 flush/s=81 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:32] S8 CPU=99% loop/s=10 flush/s=81 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:33] S8 CPU=99% loop/s=9 flush/s=84 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:34] S8 CPU=99% loop/s=6 flush/s=75 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:35] S8 CPU=99% loop/s=8 flush/s=78 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:36] S8 CPU=98% loop/s=1983 flush/s=72 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:37] S8 CPU=98% loop/s=1471 flush/s=73 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:38] S8 CPU=99% loop/s=10 flush/s=75 flush_avg=11ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:39] S8 CPU=99% loop/s=9 flush/s=80 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:40] S8 CPU=99% loop/s=7 flush/s=68 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:41] S8 CPU=99% loop/s=7 flush/s=68 flush_avg=12ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:42] S8 CPU=99% loop/s=5 flush/s=65 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+
+LVGL v8.3.11  Benchmark (in csv format)
+Weighted FPS: 8010
+Opa. speed: 109%
+Rectangle,0
+Rectangle + opa,11000
+Rectangle rounded,11000
+Rectangle rounded + opa,10000
+Circle,10000
+Circle + opa,10000
+Border,11000
+Border + opa,11000
+Border rounded,10000
+Border rounded + opa,10000
+Circle border,10000
+Circle border + opa,10000
+Border top,11000
+Border top + opa,10000
+Border left,10000
+Border left + opa,10000
+Border top + left,10000
+Border top + left + opa,10000
+Border left + right,10000
+Border left + right + opa,10000
+Border top + bottom,10000
+Border top + bottom + opa,10000
+Shadow small,7000
+Shadow small + opa,7000
+Shadow small offset,6000
+Shadow small offset + opa,6000
+Shadow large,4000
+Shadow large + opa,4000
+Shadow large offset,4000
+Shadow large offset + opa,4000
+Image RGB,10000
+Image RGB + opa,10000
+Image ARGB,10000
+Image ARGB + opa,10000
+Image chorma keyed,10000
+Image chorma keyed + opa,10000
+Image indexed,10000
+Image indexed + opa,10000
+Image alpha only,10000
+Image alpha only + opa,10000
+Image RGB recolor,10000
+Image RGB recolor + opa,10000
+Image ARGB recolor,10000
+Image ARGB recolor + opa,10000
+Image chorma keyed recolor,10000
+Image chorma keyed recolor + opa,10000
+Image indexed recolor,10000
+Image indexed recolor + opa,10000
+Image RGB rotate,7000
+Image RGB rotate + opa,7000
+Image RGB rotate anti aliased,7000
+Image RGB rotate anti aliased + opa,7000
+Image ARGB rotate,7000
+Image ARGB rotate + opa,7000
+Image ARGB rotate anti aliased,7000
+Image ARGB rotate anti aliased + opa,7000
+Image RGB zoom,8000
+Image RGB zoom + opa,8000
+Image RGB zoom anti aliased,8000
+Image RGB zoom anti aliased + opa,8000
+Image ARGB zoom,8000
+Image ARGB zoom + opa,8000
+Image ARGB zoom anti aliased,8000
+Image ARGB zoom anti aliased + opa,8000
+Text small,4000
+Text small + opa,4000
+Text medium,4000
+Text medium + opa,4000
+Text large,4000
+Text large + opa,4000
+Text small compressed,4000
+Text small compressed + opa,4000
+Text medium compressed,4000
+Text medium compressed + opa,4000
+Text large compressed,3000
+Text large compressed + opa,3000
+Line,11000
+Line + opa,11000
+Arc think,8000
+Arc think + opa,8000
+Arc thick,8000
+Arc thick + opa,8000
+Substr. rectangle,11000
+Substr. rectangle + opa,11000
+Substr. border,11000
+Substr. border + opa,11000
+Substr. shadow,7000
+Substr. shadow + opa,7000
+Substr. image,12000
+Substr. image + opa,12000
+Substr. line,12000
+Substr. line + opa,12000
+Substr. arc,8000
+Substr. arc + opa,8000
+Substr. text,6000
+Substr. text + opa,6000
+[01:45] S8 CPU=99% loop/s=1 flush/s=53 flush_avg=13ms flush_max=14ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:46] S8 CPU=78% loop/s=133791 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:47] S8 CPU=78% loop/s=133810 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:48] S8 CPU=78% loop/s=133812 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:49] S8 CPU=78% loop/s=133806 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:50] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:51] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:52] S8 CPU=78% loop/s=133806 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:53] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:54] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:55] S8 CPU=78% loop/s=133806 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:56] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:57] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:58] S8 CPU=78% loop/s=133807 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[01:59] S8 CPU=78% loop/s=133810 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:00] S8 CPU=78% loop/s=133812 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:01] S8 CPU=78% loop/s=133806 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:02] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:03] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:04] S8 CPU=78% loop/s=133806 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:05] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:06] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:07] S8 CPU=78% loop/s=133807 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:08] S8 CPU=78% loop/s=133810 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:09] S8 CPU=78% loop/s=133810 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:10] S8 CPU=78% loop/s=133806 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:11] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB
+[02:12] S8 CPU=78% loop/s=133811 flush/s=0 flush_avg=0ms flush_max=0ms SPI=4MHz LV_RAM=15KB free=38KB

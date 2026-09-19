@@ -1,0 +1,17 @@
+[01:39] B1 CPU=98% FPS=9 flush/s=95 flush_avg=45218472s flush_ma free=38KB
+[02:17] B1 CPU=1324997481% FPS=93787 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+12580% FPS=93762 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB[02:18] B1 CPU=1318984527% FPS=93773 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:19] B1 CPU=1332728422% FPS=93804 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:20] B1 CPU=1320273018% FPS=93779 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:21] B1 CPU=1321561509% FPS=93784 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:22] B1 CPU=1331010436% FPS=93804 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:23] B1 CPU=1328003959% FPS=93798 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:24] B1 CPU=1279470826% FPS=93671 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:25] B1 CPU=1328003959% FPS=93798 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:26] B1 CPU=1332298925% FPS=93802 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:27] B1 CPU=1321991006% FPS=93787 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:28] B1 CPU=1321132011% FPS=93779 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:29] B1 CPU=1324567984% FPS=93783 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:30] B1 CPU=1329292449% FPS=93797 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:31] B1 CPU=1316407548% FPS=93771 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB
+[02:32] B1 CPU=1322849999% FPS=93787 flush/s=0 flush_avg=0s flush_max=0s SPI=36MHz LV_RAM=15KB free=38KB

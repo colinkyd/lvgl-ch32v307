@@ -9,16 +9,23 @@
  *                  v < T_DOWN  -> KEY_DOWN
  *                  其余        -> KEY_NONE
  *
- * 初始值: 直接沿用 LVGL_Demo 旧 10-bit map {78,183,403,667,950} (已知良好),
- * 待 KeyADC_Test 实测 500 次采样后用 min/max 中点重标定。 */
-#define KEY_RIGHT_MAX   78     /* < 78   -> KEY_RIGHT */
-#define KEY_UP_MAX      183    /* < 183  -> KEY_UP */
-#define KEY_SELECT_MAX  403    /* < 403  -> KEY_SELECT */
-#define KEY_LEFT_MAX    667    /* < 667  -> KEY_LEFT */
-#define KEY_DOWN_MAX    950    /* < 950  -> KEY_DOWN, 其余 NONE */
+ * 标定来源 (2026-09-20 实测, Vref=3.3V, raw = V/3.3*1023):
+ *   RIGHT 0.0V -> raw ~0     | UP 0.6V -> raw ~187 | SELECT 1.0V -> raw ~310
+ *   LEFT  1.6V -> raw ~498   | DOWN 2.7V -> raw ~838 | NONE 3.3V -> raw ~1023
+ * 阈值 = 相邻两档 raw 中点 (各键离边界 >60, 远离 DEADBAND=25):
+ *   RIGHT/UP (0+187)/2=93 | UP/SELECT (187+310)/2=248 | SELECT/LEFT (310+498)/2=404
+ *   LEFT/DOWN (498+838)/2=668 | DOWN/NONE (838+1023)/2=930
+ * (旧值 {78,183,403,667,950} 沿用别的板, UP 上界 183 < 本板 UP 实测 187, 导致 UP 落进 SELECT 区) */
+#define KEY_RIGHT_MAX   93     /* < 93   -> KEY_RIGHT */
+#define KEY_UP_MAX      248    /* < 248  -> KEY_UP */
+#define KEY_SELECT_MAX  404    /* < 404  -> KEY_SELECT */
+#define KEY_LEFT_MAX    668    /* < 668  -> KEY_LEFT */
+#define KEY_DOWN_MAX    930    /* < 930  -> KEY_DOWN, 其余 NONE */
 
-/* 死区 (raw 单位): 读到值距任一阈值 < 此值时保持上一状态, 防止按键在档位边界抖动 */
-#define KEY_ADC_DEADBAND 12
+/* 死区 (raw 单位): 值距任一档位边界 < 此值时保持上一状态, 防档位边界抖动误触。
+ * 误触实测: UP 档高位值抖过 183 -> 误触 SELECT; DOWN 档高位值抖过 950 -> 误触 NONE
+ * (释放后焦点不动, 表现同误触)。原值 12 太窄, 扩到 25 覆盖边界抖动带。 */
+#define KEY_ADC_DEADBAND 25
 
 /* ===== 软件滤波 =====
  * 注意: 滑动平均每次 read_cb 只塞 1 个新采样, 窗口 N 的收敛延迟 ≈ N × read_period。

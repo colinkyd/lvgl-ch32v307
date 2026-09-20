@@ -45,18 +45,24 @@ uint16_t key_adc_read(void) {
   return (uint16_t)analogRead(PIN_JOY_ADC);
 }
 
-/* raw -> key_t 分类 (含死区保持: 返回值可能等于 last_class) */
+/* raw -> key_t 分类 (含死区保持: 返回值可能等于 hold)。
+ * 死区规则 (v2 修正): 新档与 hold 不同, 且 v 距任一档位边界 (含 950 的 NONE 边界)
+ * < DEADBAND 时保持 hold。
+ * v1 只保护"本档上边界 + hold 即本档"的情况, 挡不住跨档抖动:
+ * 按 UP 时值在 183 附近抖到 190 (进 SELECT 档), v1 拿 403 去比 -> 误触 SELECT;
+ * 按 RIGHT 抖动越过 78 -> 误触 UP/DOWN。v2 对全部 5 个边界统一设防。 */
 static key_t classify(uint16_t v, key_t hold) {
+  key_t cur = KEY_NONE;
   for (int i = 0; i < 5; i++) {
-    if (v < key_adc_map[i]) {
-      /* 距本档阈值 < DEADBAND 且上一状态已是该档 -> 保持 (死区) */
-      if (key_adc_map[i] - v < KEY_ADC_DEADBAND && hold == key_adc_index_to_key[i]) return hold;
-      return key_adc_index_to_key[i];
-    }
+    if (v < key_adc_map[i]) { cur = key_adc_index_to_key[i]; break; }
   }
-  /* NONE 区 (悬空高阻): 若上状态非 NONE 且贴近 DOWN 阈值 -> 死区保持 */
-  if (v < KEY_DOWN_MAX + KEY_ADC_DEADBAND && hold != KEY_NONE) return hold;
-  return KEY_NONE;
+  if (cur == hold) return cur;
+  for (int i = 0; i < 5; i++) {
+    int16_t d = (int16_t)v - (int16_t)key_adc_map[i];
+    if (d < 0) d = -d;
+    if (d < KEY_ADC_DEADBAND) return hold;   /* 贴任一边界 -> 保持前态 */
+  }
+  return cur;
 }
 
 key_t key_scan(void) {
@@ -91,8 +97,15 @@ static key_t    e_pending_key = KEY_NONE;/* 待取走的边沿 (按下) */
 static bool     e_started     = false;   /* 边沿模型是否已起算 (首次 poll 起) */
 
 void key_adc_poll(void) {
-  uint16_t v = key_adc_read();
-  key_t cur = classify(v, e_last_key);   /* 复用死区分类 (无滑动平均, 单次采样) */
+  /* 5 连采中值: LVGL 主循环 ~9Hz (CPU 99%), 单采样易恰好采到 ADC 尖峰;
+   * 中值抗单点/双点尖峰 (5 采 3 中), 开销 <1ms, 不影响 poll 周期。 */
+  uint16_t s[5];
+  for (int i = 0; i < 5; i++) s[i] = key_adc_read();
+  for (int i = 0; i < 4; i++)
+    for (int j = i + 1; j < 5; j++)
+      if (s[j] < s[i]) { uint16_t t = s[i]; s[i] = s[j]; s[j] = t; }
+  uint16_t v = s[2];
+  key_t cur = classify(v, e_last_key);   /* 死区分类 (全边界设防) */
 
   if (!e_started) {                       /* 首次: 锁定初始态, 不发边沿 */
     e_last_key = cur;

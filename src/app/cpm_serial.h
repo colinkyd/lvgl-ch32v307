@@ -14,9 +14,13 @@
  *   0x04 RAM已用GB    0x05 RAM总量GB
  *   0x06 GPU温度      0x07 GPU利用率   0x08 GPU显存利用率
  *   0x09 GPU显存已用  0x0A GPU显存总量
+ *   0x0B CPU频率(100MHz/VAL, 36=3600MHz)   0x0C GPU频率(100MHz/VAL, 24=2400MHz)
+ *   0x0D RAM已用(别名0x04)  0x0E RAM总量(别名0x05)
+ *   0x0F 显存已用(别名0x09) 0x10 显存总量(别名0x0A)
+ *   0x11 网络下载(10MB/s/VAL, 12=120MB/s)  0x12 网络上传(10MB/s/VAL, 2=20MB/s)
  *   0xFF 握手: 收 5A A5 FF 01 -> 回 5A A5 FF 10
  *
- * 应答: 收到 5A A5 CMD VAL (0x01~0x0A) -> 立即回 5A A5 CMD FF
+ * 应答: 收到 5A A5 CMD VAL (0x01~0x12) -> 立即回 5A A5 CMD FF
  *
  * 协议口不能混入 debug 输出: 本模块的 CPM_DEBUG 与全工程
  * CPM_DBG (board.h) 联动, 0 = 正式 (协议口纯净), 1 = 调试 (同口打日志).
@@ -34,19 +38,23 @@
 #define CPM_DBG 1
 #endif
 
-/* CPM 性能数据 (8-bit: 温度 °C / 利用率 % / 容量 GB) */
+/* CPM 性能数据 (8-bit: 温度 °C / 利用率 % / 容量 GB / 频率 100MHz / 网速 10MB/s) */
 typedef struct
 {
     uint8_t cpu_temp;        /* 0x01 */
     uint8_t cpu_load;        /* 0x02 */
     uint8_t ram_load;        /* 0x03 */
-    uint8_t ram_used;        /* 0x04 GB */
-    uint8_t ram_total;       /* 0x05 GB */
+    uint8_t ram_used;        /* 0x04 GB (0x0D 别名) */
+    uint8_t ram_total;       /* 0x05 GB (0x0E 别名) */
     uint8_t gpu_temp;        /* 0x06 */
     uint8_t gpu_load;        /* 0x07 */
     uint8_t gpu_mem_load;    /* 0x08 */
-    uint8_t gpu_mem_used;    /* 0x09 GB */
-    uint8_t gpu_mem_total;   /* 0x0A GB */
+    uint8_t gpu_mem_used;    /* 0x09 GB (0x0F 别名) */
+    uint8_t gpu_mem_total;   /* 0x0A GB (0x10 别名) */
+    uint8_t cpu_freq;        /* 0x0B 100MHz/VAL (36 = 3600MHz) */
+    uint8_t gpu_freq;        /* 0x0C 100MHz/VAL (24 = 2400MHz) */
+    uint8_t net_down;        /* 0x11 1MB/s/VAL (12 = 12MB/s) */
+    uint8_t net_up;          /* 0x12 1MB/s/VAL (2 = 2MB/s) */
 } CPM_Data;
 
 /* 帧头魔数 (线上序) */
@@ -64,6 +72,14 @@ typedef struct
 #define CPM_CMD_GPU_MEM_LOAD  0x08
 #define CPM_CMD_GPU_MEM_USED  0x09
 #define CPM_CMD_GPU_MEM_TOTAL 0x0A
+#define CPM_CMD_CPU_FREQ      0x0B   /* 100MHz/VAL */
+#define CPM_CMD_GPU_FREQ      0x0C   /* 100MHz/VAL */
+#define CPM_CMD_RAM_USED_B    0x0D   /* 别名 -> ram_used (同 0x04) */
+#define CPM_CMD_RAM_TOTAL_B   0x0E   /* 别名 -> ram_total (同 0x05) */
+#define CPM_CMD_VRAM_USED_B   0x0F   /* 别名 -> gpu_mem_used (同 0x09) */
+#define CPM_CMD_VRAM_TOTAL_B  0x10   /* 别名 -> gpu_mem_total (同 0x0A) */
+#define CPM_CMD_NET_DOWN      0x11   /* 10MB/s/VAL */
+#define CPM_CMD_NET_UP        0x12   /* 10MB/s/VAL */
 #define CPM_CMD_HANDSHAKE     0xFF
 
 #define CPM_BAUD      9600UL

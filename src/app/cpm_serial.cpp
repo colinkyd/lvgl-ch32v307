@@ -118,6 +118,15 @@ static void cpm_dispatch(uint8_t cmd, uint8_t val) {
     case CPM_CMD_GPU_MEM_LOAD:  s_data.gpu_mem_load  = val; cpm_reply(cmd); break;
     case CPM_CMD_GPU_MEM_USED:  s_data.gpu_mem_used  = val; cpm_reply(cmd); break;
     case CPM_CMD_GPU_MEM_TOTAL: s_data.gpu_mem_total = val; cpm_reply(cmd); break;
+    case CPM_CMD_CPU_FREQ:      s_data.cpu_freq      = val; cpm_reply(cmd); break;
+    case CPM_CMD_GPU_FREQ:      s_data.gpu_freq      = val; cpm_reply(cmd); break;
+    /* 别名 CMD (与 0x04/0x05/0x09/0x0A 同字段, 兼容不同 PC 版本) */
+    case CPM_CMD_RAM_USED_B:    s_data.ram_used      = val; cpm_reply(cmd); break;
+    case CPM_CMD_RAM_TOTAL_B:   s_data.ram_total     = val; cpm_reply(cmd); break;
+    case CPM_CMD_VRAM_USED_B:   s_data.gpu_mem_used  = val; cpm_reply(cmd); break;
+    case CPM_CMD_VRAM_TOTAL_B:  s_data.gpu_mem_total = val; cpm_reply(cmd); break;
+    case CPM_CMD_NET_DOWN:      s_data.net_down      = val; cpm_reply(cmd); break;
+    case CPM_CMD_NET_UP:        s_data.net_up        = val; cpm_reply(cmd); break;
     case CPM_CMD_HANDSHAKE:
       /* 5A A5 FF 01 -> 5A A5 FF 10; 其他 VAL 不应答 (容错) */
       if (val == 0x01) {

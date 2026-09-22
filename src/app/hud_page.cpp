@@ -157,6 +157,11 @@ static void build_page_cpu(void) {
   add_metric_row("RAM LOAD",  90, C_RAM,  true);
   add_metric_row("CPU FREQ", 122, C_DIM,  false);   /* 预留: 显示 "----" */
 
+  /* FREQ 行显示 "%dMHz" (含 H/z 字母), HarmonyOS_2bit 无这些字形会出方框,
+     单独把 FREQ 行的 val 改全 ASCII 的 Montserrat 12 (其余行不变)。 */
+  if (s_rows[s_row_count - 1].val)
+    lv_obj_set_style_text_font(s_rows[s_row_count - 1].val, &lv_font_montserrat_12, 0);
+
   /* 底部页脚 */
   line_h(scr, 0, H - 4, W, C_DIM, LV_OPA_40);
 }
@@ -217,6 +222,41 @@ static void build_page_system(void) {
 
   /* 装饰: 四角 */
   draw_corners(scr, 4, 10, W - 8, H - 20, C_SYS, 6);
+
+  line_h(scr, 0, H - 4, W, C_DIM, LV_OPA_40);
+}
+
+/* PAGE_DETAIL: 频率 + 网络 (动态刷新) */
+static void build_page_detail(void) {
+  lv_obj_t *scr = lv_scr_act();
+  lv_obj_clean(scr);
+  lv_obj_set_style_bg_color(scr, lv_color_hex(C_BG), 0);
+  lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+  s_row_count = 0;
+
+  line_h(scr, 0, 2, W, C_TEXT, LV_OPA_COVER);
+  s_title_lbl = lv_label_create(scr);
+  lv_label_set_text(s_title_lbl, "SYSTEM DETAIL");
+  lv_obj_set_style_text_color(s_title_lbl, lv_color_hex(C_TEXT), 0);
+  lv_obj_align(s_title_lbl, LV_ALIGN_TOP_MID, 0, 5);
+
+  /* 4 行: CPU / GPU (频率) + 网络下行/上行 (无 bar)
+     FREQ 行标签用短名 (CPU/GPU): 竖屏 160px 下长标签 "CPU FREQ" 与
+     右对齐的宽数值 "2900MHz" 会重叠; 短标签 + 单位已足够辨识。
+     网络行用 LVGL 内置箭头符号: ↓=下载, ↑=上传
+     (LVGL 符号码 U+F077/F078 在 Montserrat 12 的稀疏 cmap 中, 不会出方框) */
+  add_metric_row("CPU",    26, C_CPU,  false);
+  add_metric_row("GPU",    58, C_GPU,  false);
+  add_metric_row("NET " LV_SYMBOL_DOWN, 90, C_RAM,  false);
+  add_metric_row("NET " LV_SYMBOL_UP,  122, C_GMEM, false);
+
+  /* 第6页的值全是 ASCII (数字 + MHz/MB/s), 而 add_metric_row 默认给 val 用
+     HarmonyOS_2bit (仅 33 字形, ASCII 只含 0/2/5 和 !"'), 缺 H/z/s 等字母
+     → 会把 "2900MHz" 的 Hz、"5MB/s" 的 s 渲染成方框 (missing glyph)。
+     此页无中文需求, val 大数字改用全 ASCII 的 Montserrat 12。 */
+  for (int i = 0; i < s_row_count; i++) {
+    if (s_rows[i].val) lv_obj_set_style_text_font(s_rows[i].val, &lv_font_montserrat_12, 0);
+  }
 
   line_h(scr, 0, H - 4, W, C_DIM, LV_OPA_40);
 }
@@ -284,14 +324,14 @@ static void build_page_graph(void) {
 /* ---- 页面管理器状态 ---- */
 static HUD_PAGE s_current = PAGE_MAIN;
 static uint8_t  s_brightness = 4;   /* 0..8, 预留 */
-static CPM_Data s_last_data;
+static uint8_t  s_last_key[4];      /* 详情页去抖: 本页显示字段快照 (每页 4 字段) */
 
 /* 底部页脚: 页码 + 亮度 (MAIN 页由 cpm_ui 管, 其他页自建) */
 static lv_obj_t *s_footer;
 static void update_footer(void) {
   if (!s_footer) return;
   char buf[32];
-  snprintf(buf, sizeof(buf), "P%d/5 B%d", (int)(s_current + 1), (int)s_brightness);
+  snprintf(buf, sizeof(buf), "P%d/6 B%d", (int)(s_current + 1), (int)s_brightness);
   lv_label_set_text(s_footer, buf);
 }
 
@@ -307,7 +347,7 @@ static void build_footer(void) {
 void hud_page_init(void) {
   s_current = PAGE_MAIN;
   s_brightness = 4;
-  memset(&s_last_data, 0, sizeof(CPM_Data));
+  memset(&s_last_key, 0, sizeof(s_last_key));
 
   /* PAGE_MAIN = 复用 cpm_ui (已有完整 Cyber HUD 布局) */
   cpm_ui_init();   /* 内部 lv_obj_clean + 建 HUD + ui_set_cpm_ui_active(true) */
@@ -334,7 +374,7 @@ void hud_page_switch(HUD_PAGE page) {
   if (page >= HUD_PAGE_COUNT) page = PAGE_MAIN;
   if (page == s_current) return;   /* 同页不重建 */
   s_current = page;
-  memset(&s_last_data, 0, sizeof(CPM_Data));   /* 强制首帧刷新 */
+  memset(&s_last_key, 0, sizeof(s_last_key));   /* 强制首帧刷新 */
 
   switch (page) {
     case PAGE_MAIN:
@@ -357,6 +397,10 @@ void hud_page_switch(HUD_PAGE page) {
     case PAGE_GRAPH:
       build_page_graph();   /* 内部已 build_footer + 设采样起点 */
       break;
+    case PAGE_DETAIL:
+      build_page_detail();
+      build_footer();
+      break;
   }
 }
 
@@ -377,11 +421,11 @@ void hud_page_update(void) {
     return;
   }
 
-  /* 详情页: 自己的 memcmp 去抖 */
-  if (memcmp(d, &s_last_data, sizeof(CPM_Data)) == 0) return;
-  s_last_data = *d;
-
+  /* 详情页: 只比较本页显示字段 (避免无关字段变化引发重绘) */
   if (s_current == PAGE_CPU) {
+    uint8_t cur[4] = { d->cpu_temp, d->cpu_load, d->ram_load, d->cpu_freq };
+    if (memcmp(cur, &s_last_key, sizeof(cur)) == 0) return;
+    memcpy(&s_last_key, cur, sizeof(cur));
     if (s_row_count >= 4) {
       /* row0: CPU TEMP */
       lv_label_set_text_fmt(s_rows[0].val, "%u℃", (int)d->cpu_temp);
@@ -397,11 +441,14 @@ void hud_page_update(void) {
         lv_bar_set_value(s_rows[2].bar, d->ram_load, LV_ANIM_ON);
         lv_obj_set_style_bg_color(s_rows[2].bar, lv_color_hex(calc_color(d->ram_load)), LV_PART_INDICATOR);
       }
-      /* row3: CPU FREQ (预留, 显示 "--") */
-      lv_label_set_text(s_rows[3].val, "--");
+      /* row3: CPU FREQ (100MHz/VAL -> MHz) */
+      lv_label_set_text_fmt(s_rows[3].val, "%dMHz", (int)(d->cpu_freq * 100));
     }
   }
   else if (s_current == PAGE_GPU) {
+    uint8_t cur[4] = { d->gpu_temp, d->gpu_load, d->gpu_mem_load, d->gpu_mem_total };
+    if (memcmp(cur, &s_last_key, sizeof(cur)) == 0) return;
+    memcpy(&s_last_key, cur, sizeof(cur));
     if (s_row_count >= 4) {
       /* row0: GPU TEMP */
       lv_label_set_text_fmt(s_rows[0].val, "%u℃", (int)d->gpu_temp);
@@ -419,6 +466,21 @@ void hud_page_update(void) {
       }
       /* row3: MEM SIZE (GB, 从 gpu_mem_total) */
       lv_label_set_text_fmt(s_rows[3].val, "%uGB", (int)d->gpu_mem_total);
+    }
+  }
+  else if (s_current == PAGE_DETAIL) {
+    uint8_t cur[4] = { d->cpu_freq, d->gpu_freq, d->net_down, d->net_up };
+    if (memcmp(cur, &s_last_key, sizeof(cur)) == 0) return;
+    memcpy(&s_last_key, cur, sizeof(cur));
+    if (s_row_count >= 4) {
+      /* row0: CPU FREQ */
+      lv_label_set_text_fmt(s_rows[0].val, "%dMHz", (int)(d->cpu_freq * 100));
+      /* row1: GPU FREQ */
+      lv_label_set_text_fmt(s_rows[1].val, "%dMHz", (int)(d->gpu_freq * 100));
+      /* row2: NET DOWN (1MB/s/VAL) */
+      lv_label_set_text_fmt(s_rows[2].val, "%dMB/s", (int)d->net_down);
+      /* row3: NET UP (1MB/s/VAL) */
+      lv_label_set_text_fmt(s_rows[3].val, "%dMB/s", (int)d->net_up);
     }
   }
   /* PAGE_SYSTEM: 静态, 不刷新 */

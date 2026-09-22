@@ -6,13 +6,13 @@
 /* ============================================================
  * hud_page — 多页面 HUD 框架 (CH32V307 + ST7735 128x160 竖屏 + LVGL 8.3.11)
  *
- * 5 页: MAIN(总览) / CPU(详情) / GPU(详情) / SYSTEM(系统) / GRAPH(性能曲线)
+ * 6 页: MAIN(总览) / CPU(详情) / GPU(详情) / SYSTEM(系统) / GRAPH(性能曲线) / DETAIL(频率+网络)
  * 页面切换 = lv_obj_clean 重建当前页 (方案: 任一时刻仅 1 页对象常驻,
- *   RAM 峰值 = 单页对象, 比 5 页全建再隐藏/显示 更省 RAM)。
+ *   RAM 峰值 = 单页对象, 比 6 页全建再隐藏/显示 更省 RAM)。
  * 切换仅在按键触发时发生 (非每 loop), 重建开销可忽略。
  *
  * 数据源 cpm_serial_data() (CPM_Data, 不改); hud_page_update() 每 loop 调用,
- *   memcmp 去抖, 数值不变不重绘。GRAPH 页 500ms 采样一次 (非每 loop)。
+ *   去抖 (详情页只比较本页显示字段, 无变化不重绘)。GRAPH 页 500ms 采样一次。
  * 字体: Montserrat 12/14 (ASCII 标签) + HarmonyOS_2bit 14px (数字/℃)。
  * ============================================================ */
 
@@ -25,10 +25,11 @@ typedef enum {
   PAGE_CPU,
   PAGE_GPU,
   PAGE_SYSTEM,
-  PAGE_GRAPH
+  PAGE_GRAPH,
+  PAGE_DETAIL
 } HUD_PAGE;
 
-#define HUD_PAGE_COUNT 5
+#define HUD_PAGE_COUNT 6
 
 /* 初始化: 建 PAGE_MAIN + 底部页脚 (需在 lv_init + disp 驱动 + cpm_serial_init 后) */
 void hud_page_init(void);

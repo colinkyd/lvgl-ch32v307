@@ -1,182 +1,272 @@
 /* ============================================================
- * cpm_ui.cpp — CPM 性能监视器 UI (160x128 紧凑 4 行布局)
+ * cpm_ui.cpp — Cyber HUD 性能监视器 UI (CH32V307 + ST7735 128x160 竖屏 + LVGL 8.3.11)
  *
- * 移植自 RP2040 cpm_rp2040/rtos_task.c 的 UI 创建 + 数据刷新逻辑:
- *   - 保留: lv_label_set_text_fmt / lv_bar_set_value / calc_color
- *   - 删除: ST7789 寄存器 / PIO / DMA / FreeRTOS 队列 (改用 cpm_serial 超循环)
- *   - 字体: HarmonyOS_2bit (14px, 2bpp, 本目录)
+ * 竖屏分层 HUD:
+ *   顶部   : SYSTEM MONITOR 标题栏 (Montserrat 12, 青) + 顶/底分隔线
+ *   中部上 : CPU 面板  标题行(CPU + 温度) + 大数字% (HarmonyOS 14) + 进度条
+ *   中部下 : GPU 面板  标题行(GPU + 温度) + 大数字% (HarmonyOS 14) + 进度条
+ *   底部   : RAM / GPU MEM 次级区 (Montserrat 12 数值 + 细 bar)
  *
- * 布局 (对齐 RP2040 目标样式, 4 内容行, 160x128):
- *   行1  CPU温度+利用率  -> "CPU45C60%"   + bar(cpu_load)
- *   行2  RAM利用率        -> "RAM50%"       + bar(ram_load)
- *   行3  GPU温度+利用率   -> "GPU45C60%"   + bar(gpu_load)
- *   行4  GPU显存利用率    -> "GPU内存45%"   + bar(gpu_mem_load)
+ * HUD 元素: 面板边框 + 四角 L 形线条装饰 + 标题栏 + 分隔线 + 大数字突出.
+ * 无图片, 无 gif, 动画仅 lv_bar 平滑过渡 (LV_ANIM_ON).
  *
- * 字符集约束 (HarmonyOS_2bit 实际含):
- *   ASCII: 空格 A B C G M P R U 0-9 % / :
- *   CJK:   ℃ 内 利 存 度 率 用 （ ） ：
- *   缺: V T D E S L O H K F Q W X Y Z N I J; 中文 显 能 主 频 速 等.
- *   => "VRAM" 的 V 缺 -> 用 "GPU内存" 替代.
- *   行文本用无空格短格式, 实测宽度: CPU45C60%=144 / RAM50%=96 /
- *   GPU45C60%=144 / GPU内存45%=152 px, 均 <= 152px 可用宽, 不换行.
- *   3 位温度 (100C) 会超 8px -> LV_LABEL_LONG_SCROLL 兜底横滚.
+ * 字体 (不新建字体):
+ *   - Montserrat 12 (LV_FONT_DEFAULT, 全 ASCII) : 标题/标签/底部数值
+ *   - HarmonyOS_2bit 14px : 大数字% / 温度℃ (字库含 0-9 % ℃ 内 存 度 率 利 用)
+ *
+ * 数据源 cpm_serial_data() (CPM_Data); cpm_ui_update() 每 loop 调用,
+ *   memcmp 去抖, 数值不变不重绘 -> 流畅.
  * ============================================================ */
 #include "cpm_ui.h"
 #include "cpm_serial.h"
 #include "ui.h"            /* ui_set_cpm_ui_active */
 #include "../bsp/board.h"
-#include <string.h>   /* memcmp */
+#include <string.h>
 
 extern "C" {
 #include <lvgl.h>
 }
 
-extern const lv_font_t HarmonyOS_2bit;   /* src/app/HarmonyOS_2bit.c */
+extern const lv_font_t HarmonyOS_2bit;   /* src/app/HarmonyOS_2bit.c (14px) */
 
-/* ---- 布局常量 (160x128) ---- */
-#define PAD         4
-#define ROW_W       (LCD_WIDTH - 2 * PAD)   /* 152 */
-#define LABEL_H     15
-#define BAR_H       10
-#define ROW_GAP     5
-#define ROW_H       (LABEL_H + BAR_H + ROW_GAP)   /* 30 */
-#define TOP         8
-#define N_ROWS      4
-#define ROW_X       PAD
+/* ---- 主题色 (科技青蓝) ---- */
+#define C_BG      0x060a14   /* 深蓝黑背景 */
+#define C_CPU     0x00e5ff   /* CPU: 青 */
+#define C_GPU     0xff2d95   /* GPU: 品红 */
+#define C_RAM     0x00ff9d   /* RAM: 绿 */
+#define C_GMEM    0xffea00   /* GPU MEM: 黄 */
+#define C_TEXT    0xd6ecff   /* 主文字 */
+#define C_DIM     0x5a7a99   /* 次要文字/线 */
 
-/* 中文字体测试模式: 1 = update 不跟随数据, 4 行轮播显示
- * "CPU温度" / "GPU利用率" / "RAM" (bar 用固定演示值), 用于人工核对缺字/乱码.
- * 正式数据展示时改回 0. */
-#ifndef CPM_UI_TEST
-#define CPM_UI_TEST 0
-#endif
+/* ---- 布局常量 (128 x 160 竖屏) ---- */
+#define W         128
+#define H         160
+#define FX        3                    /* 面板左边距 */
+#define FW        (W - 2 * FX)         /* 面板宽 122 */
+#define INX       9                    /* 面板内左边距 */
+#define INW       (FW - 12)            /* 面板内宽 110 */
 
-/* bar 颜色: 0=绿 -> 100=红. 移植自 RP2040 calc_color.
- * 返回 0xRRGGBB (调用方用 lv_color_hex 转 RGB565).
- * g 随 rate 从 255 降到 0 (原版 g += (0-g)/100*rate);
- * 若 g 恒 255, 全段都是绿/黄, 看不出红端. */
+/* 顶部标题栏 */
+#define TOP_Y     3
+#define TOP_H     13
+/* CPU 面板 y=20..79 (60) */
+#define CPU_Y     20
+#define CPU_H     60
+/* GPU 面板 y=83..142 (60) */
+#define GPU_Y     83
+#define GPU_H     60
+/* 底部 y=146..158 (13) */
+#define BOT_Y     146
+
+/* ---- bar 颜色: 0=绿 -> 100=红 (RGB565, lv_color_hex 期望 0xRRGGBB) ---- */
 static uint32_t calc_color(uint8_t rate) {
-  uint8_t r = 0, g = 255, b = 0;
-  r += (255 - r) / 100 * rate;
-  g += (0 - g) / 100 * rate;
-  b += (0 - b) / 100 * rate;
-  return (uint32_t)((uint32_t)r << 16 | (uint32_t)g << 8 | b);
+  if (rate > 100) rate = 100;
+  uint8_t r = (255 * rate) / 100;        /* 0->255 */
+  uint8_t g = 255 - r;                   /* 255->0 */
+  uint8_t r5 = r >> 3, g5 = g >> 3, b5 = r5; /* 红端蓝也升 */
+  return (uint32_t)((uint32_t)r5 << 11 | (uint32_t)g5 << 5 | (uint32_t)b5);
 }
 
-/* 行句柄: label (名称+数值, 单行) + bar */
+/* ---- 主面板句柄 ---- */
 typedef struct {
-  lv_obj_t *lbl;
-  lv_obj_t *bar;
-} cpm_row_t;
+  lv_obj_t *box;       /* 面板容器 (边框) */
+  lv_obj_t *title;     /* 面板标题 CPU/GPU */
+  lv_obj_t *temp;      /* 温度 */
+  lv_obj_t *big;       /* 大数字 % (HarmonyOS) */
+  lv_obj_t *bar;       /* 进度条 */
+} hud_panel_t;
 
-static cpm_row_t s_rows[N_ROWS];
+static hud_panel_t s_cpu, s_gpu;
+static lv_obj_t *s_sys_title;
+static lv_obj_t *s_ram_lbl, *s_ram_bar;
+static lv_obj_t *s_gm_lbl,  *s_gm_bar;
+
+/* 画一条水平/竖直短线 (HUD 线条装饰). w/h 之一为 0 表示退化. */
+static lv_obj_t *line_h(lv_obj_t *parent, int x, int y, int w, uint32_t color, int opa) {
+  lv_obj_t *o = lv_obj_create(parent);
+  lv_obj_remove_style_all(o);
+  lv_obj_set_size(o, w, 1);
+  lv_obj_set_pos(o, x, y);
+  lv_obj_set_style_bg_color(o, lv_color_hex(color), 0);
+  lv_obj_set_style_bg_opa(o, opa, 0);
+  lv_obj_set_style_pad_all(o, 0, 0);
+  lv_obj_clear_flag(o, LV_OBJ_FLAG_SCROLLABLE);
+  return o;
+}
+static lv_obj_t *line_v(lv_obj_t *parent, int x, int y, int h, uint32_t color, int opa) {
+  lv_obj_t *o = lv_obj_create(parent);
+  lv_obj_remove_style_all(o);
+  lv_obj_set_size(o, 1, h);
+  lv_obj_set_pos(o, x, y);
+  lv_obj_set_style_bg_color(o, lv_color_hex(color), 0);
+  lv_obj_set_style_bg_opa(o, opa, 0);
+  lv_obj_set_style_pad_all(o, 0, 0);
+  lv_obj_clear_flag(o, LV_OBJ_FLAG_SCROLLABLE);
+  return o;
+}
+
+/* 面板四角 L 形装饰 (8 段短线). len = 每段长度. */
+static void draw_corners(lv_obj_t *parent, int x0, int y0, int w, int h,
+                         uint32_t color, int len) {
+  int opa = LV_OPA_90;
+  /* 左上 */
+  line_h(parent, x0, y0, len, color, opa);
+  line_v(parent, x0, y0, len, color, opa);
+  /* 右上 */
+  line_h(parent, x0 + w - len, y0, len, color, opa);
+  line_v(parent, x0 + w, y0, len, color, opa);
+  /* 左下 */
+  line_h(parent, x0, y0 + h, len, color, opa);
+  line_v(parent, x0, y0 + h - len, len, color, opa);
+  /* 右下 */
+  line_h(parent, x0 + w - len, y0 + h, len, color, opa);
+  line_v(parent, x0 + w, y0 + h - len, len, color, opa);
+}
+
+/* 建一个主面板 (CPU/GPU). */
+static void make_panel(hud_panel_t *p, int py, int ph, uint32_t color) {
+  lv_obj_t *scr = lv_scr_act();
+
+  /* 容器边框 */
+  p->box = lv_obj_create(scr);
+  lv_obj_remove_style_all(p->box);
+  lv_obj_set_size(p->box, FW, ph);
+  lv_obj_set_pos(p->box, FX, py);
+  lv_obj_set_style_border_color(p->box, lv_color_hex(color), 0);
+  lv_obj_set_style_border_width(p->box, 1, 0);
+  lv_obj_set_style_border_opa(p->box, LV_OPA_40, 0);
+  lv_obj_set_style_radius(p->box, 2, 0);
+  lv_obj_set_style_bg_color(p->box, lv_color_hex(color), 0);
+  lv_obj_set_style_bg_opa(p->box, LV_OPA_10, 0);
+  lv_obj_set_style_pad_all(p->box, 0, 0);
+  lv_obj_clear_flag(p->box, LV_OBJ_FLAG_SCROLLABLE);
+
+  draw_corners(scr, FX, py, FW, ph, color, 7);
+
+  /* 标题 (CPU/GPU) — Montserrat 12 */
+  p->title = lv_label_create(scr);
+  lv_label_set_text(p->title, "");
+  lv_obj_set_style_text_font(p->title, LV_FONT_DEFAULT, 0);
+  lv_obj_set_style_text_color(p->title, lv_color_hex(color), 0);
+  lv_obj_set_pos(p->title, INX, py + 4);
+
+  /* 温度 — HarmonyOS (数字 + ℃), 右对齐到面板内右端 */
+  p->temp = lv_label_create(scr);
+  lv_obj_set_style_text_font(p->temp, &HarmonyOS_2bit, 0);
+  lv_obj_set_style_text_color(p->temp, lv_color_hex(C_TEXT), 0);
+  lv_obj_align(p->temp, LV_ALIGN_TOP_RIGHT, -(W - INX - INW), py + 4);
+
+  /* 大数字 % — HarmonyOS 14px, 突出 */
+  p->big = lv_label_create(scr);
+  lv_obj_set_style_text_font(p->big, &HarmonyOS_2bit, 0);
+  lv_obj_set_style_text_color(p->big, lv_color_hex(color), 0);
+  lv_obj_set_pos(p->big, INX, py + 24);
+
+  /* 进度条 */
+  p->bar = lv_bar_create(scr);
+  lv_obj_set_size(p->bar, INW, 10);
+  lv_obj_set_pos(p->bar, INX, py + ph - 16);
+  lv_bar_set_range(p->bar, 0, 100);
+  lv_bar_set_value(p->bar, 0, LV_ANIM_OFF);
+  lv_obj_set_style_bg_color(p->bar, lv_color_hex(0x101a2b), LV_PART_MAIN);
+  lv_obj_set_style_bg_color(p->bar, lv_color_hex(color), LV_PART_INDICATOR);
+  lv_obj_set_style_radius(p->bar, 1, LV_PART_MAIN);
+  lv_obj_set_style_pad_all(p->bar, 0, LV_PART_MAIN);
+  lv_obj_set_style_pad_all(p->bar, 0, LV_PART_INDICATOR);
+}
 
 void cpm_ui_init(void) {
   lv_obj_clean(lv_scr_act());
+  lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(C_BG), 0);
+  lv_obj_set_style_bg_opa(lv_scr_act(), LV_OPA_COVER, 0);
+
+  /* 顶部 SYSTEM MONITOR 标题栏 */
+  line_h(lv_scr_act(), 0, TOP_Y, W, C_CPU, LV_OPA_COVER);          /* 顶线 */
+  line_h(lv_scr_act(), 0, TOP_Y + TOP_H, W, C_DIM, LV_OPA_60);     /* 分隔线 */
+  s_sys_title = lv_label_create(lv_scr_act());
+  lv_label_set_text(s_sys_title, "SYSTEM MONITOR");
+  lv_obj_set_style_text_font(s_sys_title, LV_FONT_DEFAULT, 0);
+  lv_obj_set_style_text_color(s_sys_title, lv_color_hex(C_CPU), 0);
+  lv_obj_align(s_sys_title, LV_ALIGN_TOP_MID, 0, TOP_Y + 2);
+
+  /* CPU / GPU 主面板 */
+  make_panel(&s_cpu, CPU_Y, CPU_H, C_CPU);
+  make_panel(&s_gpu, GPU_Y, GPU_H, C_GPU);
+  lv_label_set_text(s_cpu.title, "CPU");
+  lv_label_set_text(s_gpu.title, "GPU");
+
+  /* 底部 RAM / GPU MEM 次级区 */
+  line_h(lv_scr_act(), 0, BOT_Y - 2, W, C_DIM, LV_OPA_40);         /* 底部分隔线 */
+
+  int colw = (W - 8) / 2;                                          /* 每列宽 */
+  /* 左列 RAM */
+  s_ram_lbl = lv_label_create(lv_scr_act());
+  lv_obj_set_style_text_font(s_ram_lbl, LV_FONT_DEFAULT, 0);
+  lv_obj_set_style_text_color(s_ram_lbl, lv_color_hex(C_RAM), 0);
+  lv_obj_set_pos(s_ram_lbl, 4, BOT_Y);
+  s_ram_bar = lv_bar_create(lv_scr_act());
+  lv_obj_set_size(s_ram_bar, colw - 6, 2);
+  lv_obj_set_pos(s_ram_bar, 4, BOT_Y + 11);
+  lv_bar_set_range(s_ram_bar, 0, 100);
+  lv_bar_set_value(s_ram_bar, 0, LV_ANIM_OFF);
+  lv_obj_set_style_bg_color(s_ram_bar, lv_color_hex(0x101a2b), LV_PART_MAIN);
+  lv_obj_set_style_bg_color(s_ram_bar, lv_color_hex(C_RAM), LV_PART_INDICATOR);
+  lv_obj_set_style_radius(s_ram_bar, 0, LV_PART_MAIN);
+  lv_obj_set_style_pad_all(s_ram_bar, 0, LV_PART_MAIN);
+
+  /* 右列 GPU MEM */
+  s_gm_lbl = lv_label_create(lv_scr_act());
+  lv_obj_set_style_text_font(s_gm_lbl, LV_FONT_DEFAULT, 0);
+  lv_obj_set_style_text_color(s_gm_lbl, lv_color_hex(C_GMEM), 0);
+  lv_obj_set_pos(s_gm_lbl, 4 + colw, BOT_Y);
+  s_gm_bar = lv_bar_create(lv_scr_act());
+  lv_obj_set_size(s_gm_bar, colw - 6, 2);
+  lv_obj_set_pos(s_gm_bar, 4 + colw, BOT_Y + 11);
+  lv_bar_set_range(s_gm_bar, 0, 100);
+  lv_bar_set_value(s_gm_bar, 0, LV_ANIM_OFF);
+  lv_obj_set_style_bg_color(s_gm_bar, lv_color_hex(0x101a2b), LV_PART_MAIN);
+  lv_obj_set_style_bg_color(s_gm_bar, lv_color_hex(C_GMEM), LV_PART_INDICATOR);
+  lv_obj_set_style_radius(s_gm_bar, 0, LV_PART_MAIN);
+  lv_obj_set_style_pad_all(s_gm_bar, 0, LV_PART_MAIN);
+
+  /* 初始占位文本 (等首帧数据覆盖) */
+  lv_label_set_text_fmt(s_cpu.temp, "%u℃", 0);
+  lv_label_set_text_fmt(s_cpu.big, "%u%%", 0);
+  lv_label_set_text_fmt(s_gpu.temp, "%u℃", 0);
+  lv_label_set_text_fmt(s_gpu.big, "%u%%", 0);
+  lv_label_set_text(s_ram_lbl, "RAM 0%");
+  lv_label_set_text(s_gm_lbl, "MEM 0%");
 
   /* 暂停 ui_panel_tick (其控件已被 lv_obj_clean 释放), 保留 perf 串口上报 */
   ui_set_cpm_ui_active(true);
-
-  /* 全屏深色背景 */
-  lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(0x1b1b1b), 0);
-  lv_obj_set_style_bg_opa(lv_scr_act(), LV_OPA_COVER, 0);
-
-  for (int i = 0; i < N_ROWS; i++) {
-    int y = TOP + i * ROW_H;
-
-    /* 行文本 label: 单行, 超宽横滚 (不换行溢到 bar) */
-    lv_obj_t *lbl = lv_label_create(lv_scr_act());
-    lv_obj_set_style_text_font(lbl, &HarmonyOS_2bit, 0);
-    lv_obj_set_style_text_color(lbl, lv_color_hex(0xffffff), 0);
-    lv_label_set_long_mode(lbl, LV_LABEL_LONG_SCROLL);
-    lv_obj_set_size(lbl, ROW_W, LABEL_H);
-    lv_obj_set_pos(lbl, ROW_X, y);
-    s_rows[i].lbl = lbl;
-
-    /* bar: 量程 0-100, 满宽 */
-    lv_obj_t *bar = lv_bar_create(lv_scr_act());
-    lv_obj_set_size(bar, ROW_W, BAR_H);
-    lv_obj_set_pos(bar, ROW_X, y + LABEL_H);
-    lv_bar_set_range(bar, 0, 100);
-    lv_bar_set_value(bar, 0, LV_ANIM_OFF);
-    lv_obj_set_style_bg_color(bar, lv_color_hex(0x262626), LV_PART_MAIN);
-    lv_obj_set_style_bg_color(bar, lv_color_hex(0x303030), LV_PART_INDICATOR);
-    lv_obj_set_style_radius(bar, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_all(bar, 0, LV_PART_MAIN);
-    s_rows[i].bar = bar;
-  }
-
-  /* 初始文本: 测试模式直接放 4 个中文字体测试串 (首帧即显示);
-   * 数据模式放纯名称占位 (等首帧数据覆盖). 只用字体内已有字符. */
-#if CPM_UI_TEST
-  lv_label_set_text(s_rows[0].lbl, "CPU温度");
-  lv_label_set_text(s_rows[1].lbl, "GPU利用率");
-  lv_label_set_text(s_rows[2].lbl, "RAM");
-  lv_label_set_text(s_rows[3].lbl, "GPU内存");
-  static const uint8_t init_bar[N_ROWS] = {25, 50, 75, 95};
-  for (int i = 0; i < N_ROWS; i++) {
-    lv_bar_set_value(s_rows[i].bar, init_bar[i], LV_ANIM_OFF);
-    lv_obj_set_style_bg_color(s_rows[i].bar, lv_color_hex(calc_color(init_bar[i])), LV_PART_INDICATOR);
-  }
-#else
-  lv_label_set_text(s_rows[0].lbl, "CPU");
-  lv_label_set_text(s_rows[1].lbl, "RAM");
-  lv_label_set_text(s_rows[2].lbl, "GPU");
-  lv_label_set_text(s_rows[3].lbl, "GPU内存");
-#endif
 }
 
 void cpm_ui_update(void) {
-#if CPM_UI_TEST
-  /* ---- 中文字体测试模式: 不跟随数据, 每帧轮播 4 行测试串 ----
-   * 任务要求显示: CPU温度 / GPU利用率 / RAM.
-   * 字符覆盖核对 (HarmonyOS_2bit unicode_list_0, range_start=0x20):
-   *   CPU温度 = C P U 温 度   -> 全部在字体内
-   *   GPU利用率 = G P U 利 用 率 -> 全部在字体内
-   *   RAM       = R A M       -> 全部在字体内
-   * 3 个测试串无缺字; 缺字记录见 cpm_ui_migration_report.md §3. */
-  /* 4 行同时静态显示 (不轮播): 每行一个测试串 + 演示 bar,
-   * 一眼核对所有中文字形 + calc_color 渐变. 1s 重设一次文本 (幂等, 防外部改动). */
-  static uint32_t last_ms = 0;
-  static const char *test_str[N_ROWS] = {"CPU温度", "GPU利用率", "RAM", "GPU内存"};
-  static const uint8_t test_bar[N_ROWS] = {25, 50, 75, 95};
-  if (millis() - last_ms >= 1000) {
-    last_ms = millis();
-    for (int i = 0; i < N_ROWS; i++) {
-      lv_label_set_text(s_rows[i].lbl, test_str[i]);
-      lv_bar_set_value(s_rows[i].bar, test_bar[i], LV_ANIM_OFF);
-      lv_obj_set_style_bg_color(s_rows[i].bar, lv_color_hex(calc_color(test_bar[i])), LV_PART_INDICATOR);
-    }
-  }
-#else
   const CPM_Data *d = cpm_serial_data();
   if (!d) return;
 
   static CPM_Data last;
-  /* 数值无变化 -> 不重绘 (保持流畅, 省 SPI flush) */
-  if (memcmp(d, &last, sizeof(CPM_Data)) == 0) return;
+  if (memcmp(d, &last, sizeof(CPM_Data)) == 0) return;   /* 无变化不重绘 */
   last = *d;
 
-  /* 行1: CPU 温度 + 利用率. bar = cpu_load */
-  lv_label_set_text_fmt(s_rows[0].lbl, "CPU%uC%u%%",
-                        (int)d->cpu_temp, (int)d->cpu_load);
-  lv_bar_set_value(s_rows[0].bar, d->cpu_load, LV_ANIM_OFF);
-  lv_obj_set_style_bg_color(s_rows[0].bar, lv_color_hex(calc_color(d->cpu_load)), LV_PART_INDICATOR);
+  /* CPU 面板 */
+  lv_label_set_text_fmt(s_cpu.temp, "%u℃", (int)d->cpu_temp);
+  lv_label_set_text_fmt(s_cpu.big, "%u%%", (int)d->cpu_load);
+  lv_bar_set_value(s_cpu.bar, d->cpu_load, LV_ANIM_ON);
+  lv_obj_set_style_bg_color(s_cpu.bar, lv_color_hex(calc_color(d->cpu_load)), LV_PART_INDICATOR);
 
-  /* 行2: RAM 利用率. bar = ram_load. (ram_used/ram_total 在 CPM_Data, 宽度所限暂不显示) */
-  lv_label_set_text_fmt(s_rows[1].lbl, "RAM%u%%", (int)d->ram_load);
-  lv_bar_set_value(s_rows[1].bar, d->ram_load, LV_ANIM_OFF);
-  lv_obj_set_style_bg_color(s_rows[1].bar, lv_color_hex(calc_color(d->ram_load)), LV_PART_INDICATOR);
+  /* GPU 面板 */
+  lv_label_set_text_fmt(s_gpu.temp, "%u℃", (int)d->gpu_temp);
+  lv_label_set_text_fmt(s_gpu.big, "%u%%", (int)d->gpu_load);
+  lv_bar_set_value(s_gpu.bar, d->gpu_load, LV_ANIM_ON);
+  lv_obj_set_style_bg_color(s_gpu.bar, lv_color_hex(calc_color(d->gpu_load)), LV_PART_INDICATOR);
 
-  /* 行3: GPU 温度 + 利用率. bar = gpu_load */
-  lv_label_set_text_fmt(s_rows[2].lbl, "GPU%uC%u%%",
-                        (int)d->gpu_temp, (int)d->gpu_load);
-  lv_bar_set_value(s_rows[2].bar, d->gpu_load, LV_ANIM_OFF);
-  lv_obj_set_style_bg_color(s_rows[2].bar, lv_color_hex(calc_color(d->gpu_load)), LV_PART_INDICATOR);
+  /* 底部 RAM / GPU MEM */
+  lv_label_set_text_fmt(s_ram_lbl, "RAM %u%%", (int)d->ram_load);
+  lv_bar_set_value(s_ram_bar, d->ram_load, LV_ANIM_ON);
+  lv_obj_set_style_bg_color(s_ram_bar, lv_color_hex(calc_color(d->ram_load)), LV_PART_INDICATOR);
 
-  /* 行4: GPU 显存利用率 (显存; 用"内存"避"显"缺字). bar = gpu_mem_load */
-  lv_label_set_text_fmt(s_rows[3].lbl, "GPU内存%u%%", (int)d->gpu_mem_load);
-  lv_bar_set_value(s_rows[3].bar, d->gpu_mem_load, LV_ANIM_OFF);
-  lv_obj_set_style_bg_color(s_rows[3].bar, lv_color_hex(calc_color(d->gpu_mem_load)), LV_PART_INDICATOR);
-#endif /* CPM_UI_TEST */
+  lv_label_set_text_fmt(s_gm_lbl, "MEM %u%%", (int)d->gpu_mem_load);
+  lv_bar_set_value(s_gm_bar, d->gpu_mem_load, LV_ANIM_ON);
+  lv_obj_set_style_bg_color(s_gm_bar, lv_color_hex(calc_color(d->gpu_mem_load)), LV_PART_INDICATOR);
 }

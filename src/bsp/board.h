@@ -13,12 +13,15 @@
 #define CPM_DBG 0
 #endif
 
-/* ===== 屏幕参数 (集中管理) ===== */
-#define LCD_WIDTH     160
-#define LCD_HEIGHT    128
+/* ===== 屏幕参数 (集中管理) =====
+ * 竖屏 (portrait) 128x160: 库 setRotation(0) 内部坐标 width=128/height=160/
+ * xstart=2/ystart=1, 硬件 MADCTL=0xC0 (MX|MY, 见 lcd_st7735.cpp fix_madctl).
+ * 坐标与朝向配对, 不回绕. 横屏是 160x128 (case3, MADCTL=0x60). */
+#define LCD_WIDTH     128
+#define LCD_HEIGHT    160
 #define LCD_OFFSET_X  0
 #define LCD_OFFSET_Y  0
-#define LCD_ROTATION  3               /* setRotation: case3 -> 160x128 横屏 */
+#define LCD_ROTATION  0               /* case0: 竖屏 128x160, _xstart=2/_ystart=1 */
 
 /* LVGL draw buffer 行数 (部分缓冲, 160x N 行 RGB565) */
 #define LV_BUF_LINES  PERF_BUF_LINES

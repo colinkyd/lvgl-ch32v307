@@ -11,16 +11,15 @@ static Adafruit_ST7735 tft(PIN_TFT_CS, PIN_TFT_DC, PIN_TFT_RST);
 #endif
 
 /* 方向/色彩 (本屏 green tab).
- * 库 setRotation(3) 对 green tab 发 MADCTL = MX|MV|BGR = 0x68:
- *   该方向位组合在本屏显示正常(改色前用户未抱怨方向),
- *   仅 BGR(0x08) 位导致 R/B 互换.
- * 故最小修法 = 只清 BGR, 保留原方向位: 0x68 & ~0x08 = 0x60 (MX|MV).
- *   注意: 曾误发 0xE0(MY|MX|MV) 多加了 MY 位 -> 上下镜像, 已纠正.
+ * 竖屏 128x160: 库 setRotation(0) 内部 _width=128/_height=160/_xstart=2/_ystart=1,
+ * 发 MADCTL = MX|MY|BGR = 0xC8.
+ * 基础方向 = 清 BGR(0x08) 修色: 0xC8 & ~0x08 = 0xC0 (MX|MY).
+ * 用户要求画面整体再转 180°(不镜像): MX|MY 两位都清 -> 0x00 (默认朝向, 原点左上).
+ * 坐标(库内部 128x160) 不变, 仅硬件方向旋转 180°.
  * 位定义: MX=0x40 左右翻  MY=0x80 上下翻  MV=0x20 行列交换  BGR=0x08
- * 若仍异常, 按上面位定义调 LCD_MADCTL (候选: 0x60 / 0x68 / 0xE0 / 0xA0).
  */
 #ifndef LCD_MADCTL
-#define LCD_MADCTL 0x60
+#define LCD_MADCTL 0x00
 #endif
 
 /* 在 setRotation 之后重发一次 MADCTL (库只在 setRotation 内重写它,

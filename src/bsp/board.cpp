@@ -67,6 +67,7 @@ void perf_report(uint32_t now_ms, uint32_t cpu_pct, uint32_t lv_ram_kb, uint32_t
   uint32_t loop_rate  = perf_frames * 1000UL / win;
   uint32_t avg_flush  = perf_flushes ? (uint32_t)(perf_flush_total_ms / perf_flushes) : 0;
 
+#if CPM_DBG
   Serial.printf("[%02lu:%02lu] %s CPU=%lu%% loop/s=%lu flush/s=%lu flush_avg=%lums flush_max=%lums SPI=%luMHz LV_RAM=%luKB free=%luKB\r\n",
                 (unsigned long)(now_ms / 60000), (unsigned long)((now_ms % 60000) / 1000),
                 PERF_TEST_TAG,
@@ -74,6 +75,7 @@ void perf_report(uint32_t now_ms, uint32_t cpu_pct, uint32_t lv_ram_kb, uint32_t
                 (unsigned long)avg_flush, (unsigned long)perf_flush_max_ms,
                 (unsigned long)(spi_actual_hz() / 1000000UL),
                 (unsigned long)lv_ram_kb, (unsigned long)free_ram_kb);
+#endif
 
   perf_frames = perf_flushes = 0;
   perf_flush_total_ms = 0;

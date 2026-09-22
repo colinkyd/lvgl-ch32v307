@@ -43,7 +43,9 @@ static void btn_event_cb(lv_event_t *e) {
     static uint32_t clicks = 0;
     clicks++;
     lv_label_set_text_fmt(btn_name, "Btn %lu", (unsigned long)clicks);
+#if CPM_DBG
     Serial.printf("[ui] BUTTON clicked (#%lu)\r\n", (unsigned long)clicks);
+#endif
   }
 }
 
@@ -51,7 +53,9 @@ static void btn_event_cb(lv_event_t *e) {
 static void slider_event_cb(lv_event_t *e) {
   if (lv_event_get_code(e) == LV_EVENT_VALUE_CHANGED) {
     int32_t v = lv_slider_get_value(ui_slider);
+#if CPM_DBG
     Serial.printf("[ui] SLIDER value=%d\r\n", (int)v);
+#endif
   }
 }
 
@@ -59,7 +63,9 @@ static void slider_event_cb(lv_event_t *e) {
 static void check_event_cb(lv_event_t *e) {
   if (lv_event_get_code(e) == LV_EVENT_VALUE_CHANGED) {
     bool on = lv_obj_has_state(ui_check, LV_STATE_CHECKED);
+#if CPM_DBG
     Serial.printf("[ui] CHECKBOX %s\r\n", on ? "ON" : "OFF");
+#endif
   }
 }
 
@@ -67,15 +73,19 @@ static void check_event_cb(lv_event_t *e) {
 static void list_item_event_cb(lv_event_t *e) {
   if (lv_event_get_code(e) == LV_EVENT_CLICKED) {
     lv_obj_t *item = lv_event_get_target(e);
+#if CPM_DBG
     Serial.printf("[ui] LIST item clicked (%s)\r\n", obj_name(item));
+#endif
   }
 }
 
 /* 焦点变化: 打串口 (每次焦点移动) */
 static void focused_cb(lv_event_t *e) {
   lv_obj_t *obj = lv_event_get_target(e);
+#if CPM_DBG
   Serial.printf("[ui] focus -> %s (0x%08lx)\r\n",
                 obj_name(obj), (unsigned long)(uintptr_t)obj);
+#endif
 }
 
 void ui_group_init(void) {
@@ -142,7 +152,9 @@ void ui_group_init(void) {
   /* 初始焦点 */
   lv_group_focus_obj(ui_btn);
 
+#if CPM_DBG
   Serial.printf("[ui] group ready: btn/slider/check/list(3) in main_group, default set\r\n");
+#endif
 }
 
 /* keypad indev 原先绑定 joy_group; 焦点 UI 就绪后切到 main_group,
@@ -150,11 +162,15 @@ void ui_group_init(void) {
 void ui_group_indev_bind(void) {
   lv_indev_t *joy = lv_indev_get_next(NULL);
   if (joy == NULL) {
+#if CPM_DBG
     Serial.printf("[ui] WARN: no indev found\r\n");
+#endif
     return;
   }
   lv_indev_set_group(joy, main_group);
+#if CPM_DBG
   Serial.printf("[ui] indev bound to main_group\r\n");
+#endif
 }
 
 void ui_group_tick(void) {

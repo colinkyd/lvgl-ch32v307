@@ -10,9 +10,15 @@ extern "C" {
 static uint32_t  loop_work_ms = 0;
 static uint32_t  cpu_win_start = 0;
 
-/* LV_LOG 回调: 把 LVGL 内部日志打到串口 */
+/* CPM 性能监视器 UI 接管主屏后, 暂停 ui_panel_tick (控件已被 lv_obj_clean 释放) */
+static bool cpm_ui_active = false;
+void ui_set_cpm_ui_active(bool active) { cpm_ui_active = active; }
+
+/* LV_LOG 回调: 把 LVGL 内部日志打到串口 (仅 CPM_DBG=1) */
 static void perf_log_cb(const char *buf) {
+#if CPM_DBG
   Serial.print(buf);
+#endif
 }
 
 void ui_init(void) {
@@ -20,12 +26,14 @@ void ui_init(void) {
   cpu_win_start = millis();
   perf_init();
 
+#if CPM_DBG
   Serial.println("=== LVGL 8.3.11 control panel (CH32V307) ===");
   Serial.printf("tag=%s buf_lines=%d spi_req=%luMHz heap_total=%luKB\r\n",
                 PERF_TEST_TAG, LV_BUF_LINES,
                 (unsigned long)(PERF_SPI_SPEED / 1000000UL),
                 (unsigned long)(HEAP_TOTAL / 1024));
   Serial.println("Perf report every 1s. UI: CH32V307 TFT Control Panel (keypad).");
+#endif
 
   lv_obj_clean(lv_scr_act());   /* 清屏 (lcd_init 后的 fill 残留) */
   ui_panel_init();              /* 直接进控制板 (不再跑 benchmark) */
@@ -46,5 +54,7 @@ void ui_stats_tick(uint32_t frame_work_ms) {
     cpu_win_start = now;
   }
 
+  /* CPM UI 接管主屏: ui_panel 控件已释放, 跳过其 tick (FPS/RAM 标签 + 按键分发) */
+  if (cpm_ui_active) return;
   ui_panel_tick();   /* 控制板: 刷新 FPS / RAM 标签 */
 }

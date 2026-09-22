@@ -5,6 +5,14 @@
 #include <stdint.h>
 #include "perf_config.h"
 
+/* 全工程 debug 打印门控 (与 CPM 协议口联动):
+ *   0 = 正式: 协议口 (COM9, 9600) 只走 5A A5 帧, 不混入文本
+ *   1 = 调试: perf/[ui]/[indev] 等日志同口打印 (PC 上位机须未运行)
+ * cpm_serial.h 的 CPM_DEBUG=1 会自动把它置 1. */
+#ifndef CPM_DBG
+#define CPM_DBG 0
+#endif
+
 /* ===== 屏幕参数 (集中管理) ===== */
 #define LCD_WIDTH     160
 #define LCD_HEIGHT    128

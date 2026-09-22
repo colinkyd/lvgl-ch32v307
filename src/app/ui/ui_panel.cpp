@@ -79,7 +79,9 @@ static void menu_item_cb(lv_event_t *e) {
   for (int i = 0; i < 3; i++) {
     if (item == menu_items[i]) {
       const char *names[3] = {"Display", "Input", "System"};
+#if CPM_DBG
       Serial.printf("[ui] enter subpage: %s\r\n", names[i]);
+#endif
       ui_panel_subpage_build(lv_scr_act(), names[i]);
       return;
     }
@@ -90,7 +92,11 @@ static void menu_item_cb(lv_event_t *e) {
 static void menu_focus_cb(lv_event_t *e) {
   lv_obj_t *o = lv_event_get_target(e);
   for (int i = 0; i < 3; i++)
-    if (o == menu_items[i]) Serial.printf("[ui] menu focus -> item%d\r\n", i);
+    if (o == menu_items[i]) {
+#if CPM_DBG
+      Serial.printf("[ui] menu focus -> item%d\r\n", i);
+#endif
+    }
 }
 
 /* ---- 子页面: slider 值变化 -> 同步 bar + value 标签 ---- */
@@ -104,7 +110,9 @@ static void sub_slider_cb(lv_event_t *e) {
 /* ---- 子页面: Back 按钮 ENTER 点击 -> 回主菜单 (由 handle_key 触发) ---- */
 static void sub_back_cb(lv_event_t *e) {
   if (lv_event_get_code(e) != LV_EVENT_CLICKED) return;
+#if CPM_DBG
   Serial.printf("[ui] back -> main menu\r\n");
+#endif
   lv_obj_del(sub_root);          /* 回收子页面全部对象 (释放 RAM) */
   sub_root = sub_slider = sub_back = sub_bar = sub_val_lbl = NULL;
   indev_set_group(menu_group);   /* 键路由切回主菜单 */
@@ -225,7 +233,9 @@ void ui_panel_init(void) {
   fps_cnt = 0;
   fps_win_start = millis();
 
+#if CPM_DBG
   Serial.printf("[ui] CH32V307 control panel ready (keypad, manual dispatch)\r\n");
+#endif
 }
 
 /* ================= 子页面 ================= */

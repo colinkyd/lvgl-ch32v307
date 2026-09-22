@@ -36,6 +36,7 @@ static uint32_t key_to_lv_key(key_t k) {
 }
 
 /* key_t 名称 (read_cb 边沿日志用) */
+#if CPM_DBG
 static const char *key_name(key_t k) {
   switch (k) {
     case KEY_UP:     return "UP";
@@ -47,6 +48,7 @@ static const char *key_name(key_t k) {
     default:         return "NONE";
   }
 }
+#endif /* CPM_DBG */
 
 static lv_group_t *joy_group = NULL;   /* 占位 group (init 时先绑, 焦点 UI 就绪后切 main_group) */
 
@@ -61,13 +63,16 @@ static lv_group_t *joy_group = NULL;   /* 占位 group (init 时先绑, 焦点 U
  *
  * 键值 (bsp key_t): UP/DOWN/LEFT/RIGHT/SELECT, 手动映射到焦点操作 (见 ui_panel)。
  */
-static key_t last_log_key = KEY_NONE;
+#if CPM_DBG
+static key_t last_log_key = KEY_NONE;   /* 边沿日志状态 (仅调试编译) */
+#endif
 
 /* read_cb: LVGL 周期性调用 (主循环上下文, ~15ms)。纯哑火 + 边沿日志。
  * 采样/边沿去抖在 ui_panel_tick 的 key_adc_poll() (每 loop, 对照 PC_HUD), 此处不 poll。 */
 static void joy_read_cb(lv_indev_drv_t *drv, lv_indev_data_t *data) {
   (void)drv;
 
+#if CPM_DBG
   /* 边沿日志: 打印当前稳定按键 (辅助诊断; current 由 tick 的 poll 更新, 滞后 ~1 loop) */
   key_t cur = key_adc_current();
   if (cur != last_log_key) {
@@ -76,6 +81,7 @@ static void joy_read_cb(lv_indev_drv_t *drv, lv_indev_data_t *data) {
                   key_name(cur), millis(), raw);
     last_log_key = cur;
   }
+#endif
 
   /* 哑火: 不向 LVGL 报键 (焦点全手动, 见 ui_panel::handle_key)。返回 RELEASED */
   data->state = LV_INDEV_STATE_RELEASED;
@@ -105,6 +111,8 @@ void lv_port_indev_init(void) {
   lv_timer_set_period(joy->driver->read_timer, 15);
   lv_indev_set_group(joy, joy_group);
 
+#if CPM_DBG
   Serial.printf("[indev] keypad ready: long_press=%dms rep=%dms (UP=NEXT DOWN=PREV L/R=LEFT/RIGHT SEL=ENTER)\r\n",
                 (int)indev_drv.long_press_time, (int)indev_drv.long_press_repeat_time);
+#endif
 }

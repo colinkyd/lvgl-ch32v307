@@ -1,0 +1,33 @@
+﻿port=COM9 baud=9600 8N1 serial(澶嶅埢PC) rounds=3  time=2026-09-22 11:03:26
+[HS] 5A,A5,FF,01 -> 5A,A5,FF,10  OK
+[R1 c01] -> 5A,A5,01,FF  11ms  OK
+[R1 c02] -> 5A,A5,02,FF  144ms  OK
+[R1 c03] -> 5A,A5,03,FF  145ms  OK
+[R1 c04] -> 5A,A5,04,FF  145ms  OK
+[R1 c05] -> 5A,A5,05,FF  145ms  OK
+[R1 c06] -> 5A,A5,06,FF  145ms  OK
+[R1 c07] -> 5A,A5,07,FF  145ms  OK
+[R1 c08] -> 5A,A5,08,FF  144ms  OK
+[R1 c09] -> 5A,A5,09,FF  144ms  OK
+[R1 c0A] -> 5A,A5,0A,FF  145ms  OK
+[R2 c01] -> 5A,A5,01,FF  145ms  OK
+[R2 c02] -> 5A,A5,02,FF  12ms  OK
+[R2 c03] -> 5A,A5,03,FF  11ms  OK
+[R2 c04] -> 5A,A5,04,FF  11ms  OK
+[R2 c05] -> 5A,A5,05,FF  12ms  OK
+[R2 c06] -> 5A,A5,06,FF  16ms  OK
+[R2 c07] -> 5A,A5,07,FF  11ms  OK
+[R2 c08] -> 5A,A5,08,FF  11ms  OK
+[R2 c09] -> 5A,A5,09,FF  11ms  OK
+[R2 c0A] -> 5A,A5,0A,FF  11ms  OK
+[R3 c01] -> 5A,A5,01,FF  11ms  OK
+[R3 c02] -> 5A,A5,02,FF  11ms  OK
+[R3 c03] -> 5A,A5,03,FF  11ms  OK
+[R3 c04] -> 5A,A5,04,FF  11ms  OK
+[R3 c05] -> 5A,A5,05,FF  11ms  OK
+[R3 c06] -> 5A,A5,06,FF  11ms  OK
+[R3 c07] -> 5A,A5,07,FF  11ms  OK
+[R3 c08] -> 5A,A5,08,FF  11ms  OK
+[R3 c09] -> 5A,A5,09,FF  11ms  OK
+[R3 c0A] -> 5A,A5,0A,FF  11ms  OK
+==== SUMMARY: 30 / 30 frames OK (100%) ====

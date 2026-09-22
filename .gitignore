@@ -1,5 +1,9 @@
 build/
+build_data/
+build_debug/
+build_fps/
 # 构建 / 烧录工具脚本与日志 (本机工具, 非源码)
 *.ps1
 *.log
 capture.txt
+fps_capture.txt

@@ -8,6 +8,8 @@
 #include "app/ui.h"
 #include "app/cpm_serial.h"
 #include "app/cpm_ui.h"
+#include "app/hud_page.h"
+#include "app/hud_input.h"
 
 extern "C" {
 #include <lvgl.h>
@@ -23,7 +25,8 @@ void setup(void) {
 
   delay(200);        // 让串口/外设稳定
   cpm_serial_init(); // CPM 协议口: 9600 8N1 (在 ui_init 的 115200 banner 之后切速)
-  cpm_ui_init();     // CPM 性能监视器 UI: 替换控制板为主屏 (160x128 紧凑 5 行)
+  hud_page_init();   // 多页 HUD: 建 PAGE_MAIN (复用 cpm_ui) + 页脚
+  hud_input_init();  // 五向键输入: 起 key_adc 边沿模型
 }
 
 void loop(void) {
@@ -31,7 +34,8 @@ void loop(void) {
 
   perf_on_frame();           /* 主循环率参考 */
   cpm_serial_poll();    // CPM 协议: 批量收帧 + 应答 (在 LVGL 重绘前, 应答及时)
-  cpm_ui_update();      // CPM UI: 数值变化时刷新 label/bar (无变化不重绘)
+  hud_input_poll();     // 五向键: 取一个边沿 -> 切页/亮度 (非阻塞)
+  hud_page_update();    // HUD: 按当前页刷新数据 (memcmp 去抖, 无变化不重绘)
   lv_port_tick_task();   // 硬件 1ms tick 增量
   lv_timer_handler();    // 非阻塞 LVGL 主处理 (动画/timer/刷新, 含同步 flush)
 

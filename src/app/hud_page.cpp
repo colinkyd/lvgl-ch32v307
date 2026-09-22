@@ -15,6 +15,8 @@
 #include "cpm_serial.h"
 #include "cpm_ui.h"       /* PAGE_MAIN 复用 cpm_ui_init/cpm_ui_update */
 #include "ui.h"           /* ui_set_cpm_ui_active */
+#include "hud_history.h"  /* 性能历史环形缓存 (GRAPH 页) */
+#include "hud_graph.h"    /* 实时曲线 lv_chart 封装 (SHIFT 滚动) */
 #include "../bsp/board.h"
 #include <string.h>
 
@@ -219,6 +221,66 @@ static void build_page_system(void) {
   line_h(scr, 0, H - 4, W, C_DIM, LV_OPA_40);
 }
 
+/* build_footer 定义在后部, 供 build_page_graph 调用前可见 */
+static void build_footer(void);
+
+/* ---- PAGE_GRAPH: 实时历史曲线 (chart 封装在 hud_graph, 此页只搭布局) ---- */
+static lv_obj_t   *s_graph_cur; /* 底部 "CPU xx% GPU xx%" 标签 */
+
+static void graph_update_current(void) {
+  if (!s_graph_cur) return;
+  uint8_t cl, gl;
+  hud_history_latest(&cl, &gl);
+  lv_label_set_text_fmt(s_graph_cur, "CPU %d%% GPU %d%%", (int)cl, (int)gl);
+}
+
+static void build_page_graph(void) {
+  lv_obj_t *scr = lv_scr_act();
+  lv_obj_clean(scr);
+  lv_obj_set_style_bg_color(scr, lv_color_hex(C_BG), 0);
+  lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+  s_row_count = 0;
+
+  /* 标题栏 */
+  line_h(scr, 0, 2, W, C_TEXT, LV_OPA_COVER);
+  s_title_lbl = lv_label_create(scr);
+  lv_label_set_text(s_title_lbl, "PERFORMANCE GRAPH");
+  lv_obj_set_style_text_color(s_title_lbl, lv_color_hex(C_TEXT), 0);
+  lv_obj_align(s_title_lbl, LV_ALIGN_TOP_MID, 0, 5);
+
+  /* 图例: 色块 + CPU/GPU 标签 (删除 "CPU / GPU LOAD" 文字, 避免与白框/底部重叠) */
+  lv_obj_t *sw_cpu = lv_obj_create(scr);
+  lv_obj_remove_style_all(sw_cpu);
+  lv_obj_set_size(sw_cpu, 8, 8);
+  lv_obj_align(sw_cpu, LV_ALIGN_TOP_LEFT, 8, 26);
+  lv_obj_set_style_bg_color(sw_cpu, lv_color_hex(C_CPU), 0);
+  lv_obj_t *lg_cpu = lv_label_create(scr);
+  lv_label_set_text(lg_cpu, "CPU");
+  lv_obj_set_style_text_color(lg_cpu, lv_color_hex(C_CPU), 0);
+  lv_obj_align(lg_cpu, LV_ALIGN_TOP_LEFT, 20, 25);
+
+  lv_obj_t *sw_gpu = lv_obj_create(scr);
+  lv_obj_remove_style_all(sw_gpu);
+  lv_obj_set_size(sw_gpu, 8, 8);
+  lv_obj_align(sw_gpu, LV_ALIGN_TOP_LEFT, 48, 26);
+  lv_obj_set_style_bg_color(sw_gpu, lv_color_hex(C_GPU), 0);
+  lv_obj_t *lg_gpu = lv_label_create(scr);
+  lv_label_set_text(lg_gpu, "GPU");
+  lv_obj_set_style_text_color(lg_gpu, lv_color_hex(C_GPU), 0);
+  lv_obj_align(lg_gpu, LV_ALIGN_TOP_LEFT, 60, 25);
+
+  /* chart: hud_graph 封装 (SHIFT 示波器滚动, 60 点, 双线, 初始化平铺当前值) */
+  hud_graph_create(scr);
+
+  /* 底部当前值 (下移, 避开 chart 底边 y=128) */
+  s_graph_cur = lv_label_create(scr);
+  lv_obj_set_style_text_color(s_graph_cur, lv_color_hex(C_TEXT), 0);
+  lv_obj_align(s_graph_cur, LV_ALIGN_BOTTOM_MID, 0, -16);
+  graph_update_current();
+
+  build_footer();   /* build_footer 定义在后部, 上方前向声明已可见 */
+}
+
 /* ---- 页面管理器状态 ---- */
 static HUD_PAGE s_current = PAGE_MAIN;
 static uint8_t  s_brightness = 4;   /* 0..8, 预留 */
@@ -229,7 +291,7 @@ static lv_obj_t *s_footer;
 static void update_footer(void) {
   if (!s_footer) return;
   char buf[32];
-  snprintf(buf, sizeof(buf), "P%d/4 B%d", (int)(s_current + 1), (int)s_brightness);
+  snprintf(buf, sizeof(buf), "P%d/5 B%d", (int)(s_current + 1), (int)s_brightness);
   lv_label_set_text(s_footer, buf);
 }
 
@@ -249,6 +311,9 @@ void hud_page_init(void) {
 
   /* PAGE_MAIN = 复用 cpm_ui (已有完整 Cyber HUD 布局) */
   cpm_ui_init();   /* 内部 lv_obj_clean + 建 HUD + ui_set_cpm_ui_active(true) */
+
+  /* GRAPH 页历史环形缓存 (500ms 采样, 非阻塞) */
+  hud_history_init();
 }
 
 HUD_PAGE hud_page_current(void) { return s_current; }
@@ -289,6 +354,9 @@ void hud_page_switch(HUD_PAGE page) {
       build_page_system();
       build_footer();
       break;
+    case PAGE_GRAPH:
+      build_page_graph();   /* 内部已 build_footer + 设采样起点 */
+      break;
   }
 }
 
@@ -299,6 +367,13 @@ void hud_page_update(void) {
   /* PAGE_MAIN: 委托 cpm_ui_update (内部 memcmp 去抖) */
   if (s_current == PAGE_MAIN) {
     cpm_ui_update();
+    return;
+  }
+
+  /* PAGE_GRAPH: 500ms 采样一次 (hud_graph_tick 内部门控, 历史缓冲全局持续记录) */
+  if (s_current == PAGE_GRAPH) {
+    hud_graph_tick();   /* 到点则 hud_history_push + lv_chart_set_next_value (SHIFT 左移) */
+    graph_update_current();   /* 底部当前值每帧刷新 */
     return;
   }
 
